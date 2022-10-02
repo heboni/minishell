@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 09:23:29 by heboni            #+#    #+#             */
-/*   Updated: 2022/09/21 07:35:06 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/02 11:39:35 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ int	get_env_var_value_to_saver(char **tokens, int token_n, char *line, int i, t_
 	// 	}
 	// }
 	// tokens[token_n][++k] = '\0';
-	printf("\n[get_env_var_value_to_saver] returned i = %d END\n", i - 1);
+	
+	// printf("\n[get_env_var_value_to_saver] returned i = %d END\n", i - 1);
 	return (i - 1);
 }
 
@@ -58,13 +59,14 @@ void	put_env_value_to_token(char *var_value, char **tokens, int token_n)
 {
 	int		k;
 
-	k = ft_strlen(tokens[token_n]) - 1; printf("\n[get_env_var_value_to_saver] k=%d\n", k);
+	k = ft_strlen(tokens[token_n]) - 1; 
+	// printf("\n[get_env_var_value_to_saver] k=%d\n", k);
 	if (var_value) //если env_var не существует, текущий аргумент - null
 	{
 		while (*var_value)
 		{
 			tokens[token_n][++k] = *var_value;
-			printf("%c", tokens[token_n][k]);
+			// printf("%c", tokens[token_n][k]);
 			var_value++;
 		}
 	}

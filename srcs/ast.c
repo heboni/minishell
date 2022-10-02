@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 20:54:51 by sotherys          #+#    #+#             */
-/*   Updated: 2022/09/30 23:48:34 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/02 14:30:18 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ast_node_lst_push_bottom(t_ast_node **head, t_ast_type type)
 	if (new == NULL)
 		exit(STACK_OVERFLOW);
 	new->type = type;
-	
+	new->data = NULL; //чтобы не пытался зафришить free((*ast_nodes)->data);
 	new->next = NULL;
 	if (!*head)
 	{
@@ -50,11 +50,12 @@ void	ast_node_lst_push_bottom(t_ast_node **head, t_ast_type type)
 }
 
 
-void	ast_cmd_node_lst_push_bottom(t_ast_node **head, char **tokens, int *i, t_ast_type type, t_msh *msh_ctx)
+void	ast_cmd_node_lst_push_bottom(t_ast_node **head, char **tokens, int *t_i, t_ast_type type, t_msh *msh_ctx)
 {
 	t_ast_node	*new;
 	t_ast_node	*last_node;
 	t_ast_cmd	*cmd;
+	char		*path;
 
 	new = (t_ast_node *)malloc(sizeof(t_ast_node));
 	if (new == NULL)
@@ -63,13 +64,17 @@ void	ast_cmd_node_lst_push_bottom(t_ast_node **head, char **tokens, int *i, t_as
 	if (type == MSH_CMD)
 	{
 		cmd = (t_ast_cmd *)malloc(sizeof(t_ast_cmd));
-		cmd->cmd_name = ft_strdup(tokens[*i]);
+		cmd->cmd_name = ft_strdup(tokens[*t_i]);
+		cmd->path = NULL;
+		// path = get_cmd_path(cmd->cmd_name, msh_ctx->env);
+		// if (path) //TO DO добавить в аргументы
+		// 	cmd->path = path;
 		new->data = cmd;
 		new->fd_in = STDIN_FILENO;
 		new->fd_out = STDOUT_FILENO;
-		
-		cmd->argv = get_cmd_node_argv(tokens, i, msh_ctx);
-		print_string_array(cmd->argv, 0);
+		//в какой момент вместо $? подставляется статус выполнения предыдущей команды
+		cmd->argv = get_cmd_node_argv(tokens, t_i, msh_ctx); //должен возвращать NULL если нет argv +
+		// print_string_array(cmd->argv, 0);
 	}
 	new->next = NULL;
 	if (!*head)
@@ -94,7 +99,7 @@ char	**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx)
 	tmp_i = *token_i;
 	tokens_count = get_tokens_count(tokens);
 	// printf("[get_cmd_node_argv] *token_i = %d, tokens_count = %d\n", *token_i, tokens_count);
-	while (++(*token_i) < tokens_count) //с токена-команды переходим на токен-0-аргумент
+	while (++(*token_i) < tokens_count) //с токена-команды переходим на токен-0-аргумент до конца line или до спец.токена
 	{
 		if (is_special_token(tokens, *token_i, msh_ctx->exeption_indexes, msh_ctx->exeption_indexes_n))
 			break;
@@ -113,22 +118,22 @@ char	**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx)
 	while (++i < argv_count)
 	{
 		argv[i] = strdup(tokens[++tmp_i]);
-		printf("[get_cmd_node_argv] argv[%d]=%s\n", i, argv[i]);
+		// printf("[get_cmd_node_argv] argv[%d]=%s\n", i, argv[i]);
 	}
 	argv[i] = NULL;
-	printf("[get_cmd_node_argv] END\n");
+	// printf("[get_cmd_node_argv] END\n");
 	return (argv);
 }
 
-//токен является специальным, если он один из (|<><<>>) И token_n нет в exeption_indexes
+//токен является специальным, если он один из (|<><<>>) И token_n нет в exeption_indexes ()
 int	is_special_token(char **tokens, int token_i, int *exeption_indexes, int exeption_indexes_n) 
 {
 	int is_special;
 
 	is_special = 0;
-	if (!is_real_token(exeption_indexes, exeption_indexes_n, token_i))
-		return (0);
-	if (is_special_symbols(tokens[token_i]))
+	// if (!is_in_exception_indexes(exeption_indexes, exeption_indexes_n, token_i))
+	// 	return (0);
+	if (is_special_symbols(tokens[token_i]) && !is_in_exception_indexes(exeption_indexes, exeption_indexes_n, token_i))
 		is_special = 1;
 	return (is_special);
 }
@@ -182,12 +187,17 @@ void	print_nodes_list(t_ast_node *ast_nodes)
 			{
 				cmd = ast_nodes->data;
 				printf("CMD->NAME: %s\n", cmd->cmd_name);
-				// printf("CMD->ARGV: ");
-				// while (*(cmd->argv) != NULL)
-				// {
-				// 	printf("%s ", *(cmd->argv));
-				// 	(cmd->argv)++;
-				// }
+				if (cmd->argv)
+				{
+					char **cmd_argv = cmd->argv;
+					printf("        CMD->ARGV: ");
+					while (*cmd_argv != NULL)
+					{
+						printf("%s, ", *cmd_argv);
+						cmd_argv++;
+					}
+					printf("\n");
+				}
 			}
 		}
 		ast_nodes = ast_nodes->next;

@@ -8,7 +8,9 @@ SRCS_FILES	= main.c							\
 			  btree/btree_apply_prefix.c		\
 			  btree/btree_create_node.c			\
 			  libft/ft_strlen.c 				\
+			  libft/ft_strcpy.c					\
 			  libft/ft_strcmp.c					\
+			  libft/ft_strncmp.c				\
 			  libft/ft_strdup.c					\
 			  libft/ft_putstr_fd.c				\
 			  libft/ft_isalpha.c				\
@@ -39,8 +41,8 @@ OBJS		= $(addprefix $(BUILD_DIR), $(OBJS_FILES))
 DEPS		= $(OBJS:.o=.d)
 
 CC			= gcc
-CFLAGS		= -MMD
-# CFLAGS		= -Wall -Werror -Wextra -MMD
+# CFLAGS		= -MMD
+CFLAGS		= -Wall -Werror -Wextra -MMD
 LIBS		= -lreadline
 
 all: $(NAME)

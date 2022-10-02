@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 14:26:06 by heboni            #+#    #+#             */
-/*   Updated: 2022/09/21 07:35:01 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/02 13:09:46 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ int	regular_char_lexer(char *line, int i, t_msh *msh_ctx)
 			if (line[i] == '\"') //ech"o" 90
 				i++;
 		}
-		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\0')//04.08 fix $TERM $ HOME //11.08 fix $
+		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\0' && line[i + 1] != '?')//04.08 fix $TERM $ HOME //11.08 fix $//2.10 fix $?
 		{
 			i = get_env_var_value_to_lexer(line, i + 1, &msh_ctx->env, msh_ctx); // i = get_env_var_value_to_lexer(line, i + 1, 0, envs);
 			i++;
 			continue; //04.08 fix $TERM$HOME - должен быть 1 аргумент
 		}
-		printf("%c", line[i]);
+		// printf("%c", line[i]);
 		if (line[i] == ' ') //добавить другие пробелы
 			break ;
 		if (line[i] == '\0')
@@ -55,7 +55,7 @@ int	special_chars_lexer(char *line, int i) //из regular_char не надо в�
 	i++;
 	if ((line[i - 1] == '>' && line[i] == '>') || (line[i - 1] == '<' && line[i] == '<'))
 	{
-		printf("%c\n", line[i]);
+		// printf("%c\n", line[i]);
 		i++;
 	}
 	return (i);
@@ -68,7 +68,7 @@ int	double_quotes_lexer(char *line, int i, t_msh *msh_ctx)
 	{
 		// printf("double[%d]: %c\n", i, line[i]);
 		// printf("%c", line[i]); //05.08
-		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\"') //11.08 fix "$", "$ aaa"
+		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\"' && line[i + 1] != '?') //11.08 fix "$","$ aaa"//2.10 fix "$?"
 			i = get_env_var_value_to_lexer(line, i + 1, &msh_ctx->env, msh_ctx); // i = get_env_var_value_to_lexer(line, i + 1, 0, envs); //05.08
 		else
 			printf("%c", line[i]); //05.08

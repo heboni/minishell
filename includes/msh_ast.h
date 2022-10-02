@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:35:27 by sotherys          #+#    #+#             */
-/*   Updated: 2022/09/24 09:59:28 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/02 14:37:42 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_ast_cmd
 	char	*cmd_name;
 	char	*path;
 	char	**argv;
+	int		*status_argv; //можно тут хранить индексы аргументов, которые являются $? "$?"
 }				t_ast_cmd;
 
 void		ast_exec(t_btree *root);

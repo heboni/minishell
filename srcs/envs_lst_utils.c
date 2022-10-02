@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 08:58:55 by heboni            #+#    #+#             */
-/*   Updated: 2022/09/29 22:38:23 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/01 10:11:12 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ void	env_lst_push_bottom(t_env **head, char *name, char *value)
 	new = (t_env *)malloc(sizeof(t_env));
 	if (new == NULL)
 		exit(STACK_OVERFLOW);
-	// new->var_name = name;
-	// new->var_value = value;
 	new->var_name = ft_strdup(name);
 	if (value)
 		new->var_value = ft_strdup(value);

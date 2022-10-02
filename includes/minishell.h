@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/09/29 21:58:31 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/02 21:51:22 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,16 @@
 # define STACK_OVERFLOW -1
 # define INPUT_ERROR	-2
 
+# define SH_FG_RED "\033[31m"
+# define SH_FG_GREEN "\033[32m"
+# define SH_FG_RESET "\033[39m"
+# define SH_FG_CYAN "\033[36m"
+
 // struct s_msh	*msh_ctx;
 
 typedef struct s_msh
 {
-	t_btree	*ast;
+	t_btree	*ast; //DELETE
 	t_env	*env;
 	int		*exeption_indexes;
 	int		exeption_indexes_n;
@@ -67,7 +72,7 @@ void		special_chars_token_saver(char **tokens, int token_n, char *line, int i);
 
 // tokens_to_ast_nodes
 t_ast_node 	*tokens_to_ast_nodes(char **tokens, int tokens_count, t_msh *msh_ctx);
-int			is_real_token(int *special_indexes, int special_indexes_n, int token_i);
+int			is_in_exception_indexes(int *exeption_indexes, int exeption_indexes_n, int token_i);
 
 // ast.c
 void		print_nodes_list(t_ast_node *ast_nodes);
@@ -93,6 +98,9 @@ int		get_env_var_value_to_saver(char **tokens, int token_n, char *line, int i, t
 int		get_env_var_value_to_lexer(char *line, int i, t_env **envs, t_msh *msh_ctx);
 char	*get_env_value_by_name_from_envs(void *name, t_env *envs, t_msh *msh_ctx);
 // char	*get_env_value_by_name_from_envs(void *name, t_env **envs, t_msh *msh_ctx);
+
+// get_cmd_path
+char	*get_cmd_path(char	*md_name, t_env *env);
 
 // buildins
 int		env_builtin(t_env *envs, char **argv, int fd);

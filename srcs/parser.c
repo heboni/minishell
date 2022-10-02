@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:19:51 by heboni            #+#    #+#             */
-/*   Updated: 2022/09/30 23:47:14 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/02 12:30:31 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ t_ast_node *parser(char *line, t_msh *msh_ctx)
 		return (NULL);
 	}
 	tokens_count = get_tokens_count(tokens); // printf("tokens_count: %d\n", tokens_count);
-	printf("[parser] char *tokens[%d]: ", tokens_count); print_string_array(tokens, 0);
+	// printf("[parser] char *tokens[%d]: ", tokens_count); print_string_array(tokens, 0);
 	
 	msh_ctx->exeption_indexes_n = exeption_indexes_n;
 	msh_ctx->exeption_indexes = exeption_indexes;
-	print_int_array(msh_ctx->exeption_indexes, msh_ctx->exeption_indexes_n);
+	// print_int_array(msh_ctx->exeption_indexes, msh_ctx->exeption_indexes_n);
 	
 	// ast_nodes = NULL;
 	ast_nodes = tokens_to_ast_nodes(tokens, tokens_count, msh_ctx);
@@ -56,7 +56,7 @@ char	**get_tokens(char *line, t_msh *msh_ctx, int **exeption_indexes, int *exept
 	tokens_count = 0;
 	*exeption_indexes_n = 0;
 	len = ft_strlen(line);
-	printf("[get_tokens]: line: %s, len = %d\n", line, len);
+	// printf("[get_tokens]: line: %s, len = %d\n", line, len);
 	tokens = NULL;
 	while (++i < len)
 	{
@@ -73,13 +73,13 @@ char	**get_tokens(char *line, t_msh *msh_ctx, int **exeption_indexes, int *exept
 			if (msh_ctx->not_closed_quote == 1)
 				return (NULL);
 			int token_len = i - tmp_i + msh_ctx->cur_env_vars_len;
-			printf("\ni: %d, tmp_i: %d, msh_ctx->cur_env_vars_len: %d, token_len: %d", i, tmp_i, msh_ctx->cur_env_vars_len, token_len);
+			// printf("\ni: %d, tmp_i: %d, msh_ctx->cur_env_vars_len: %d, token_len: %d", i, tmp_i, msh_ctx->cur_env_vars_len, token_len);
 			tokens_count++;
-			printf("\n[get_tokens] tokens_count: %d\n\n", tokens_count);
+			// printf("\n[get_tokens] tokens_count: %d\n\n", tokens_count);
 			
 			if (is_exeption_token(line, tmp_i, '\"'))
 			{
-				printf("\n[get_tokens] ONLY SPECIAL CHAR TOKEN\n");
+				// printf("\n[get_tokens] ONLY SPECIAL CHAR TOKEN\n");
 				exeption_indexes = int_array_realloc(exeption_indexes, exeption_indexes_n);
 				(*exeption_indexes)[*exeption_indexes_n - 1] = tokens_count - 1;
 			}
@@ -89,8 +89,8 @@ char	**get_tokens(char *line, t_msh *msh_ctx, int **exeption_indexes, int *exept
 			if (tokens[tokens_count - 1] == NULL)
 				exit(STACK_OVERFLOW);
 			double_quotes_token_saver(tokens, tokens_count - 1, line, tmp_i, msh_ctx);//заполнить текущий токен
-			printf("saved_token: %s\n\n", tokens[tokens_count - 1]);
-			print_string_array(tokens, tokens_count);
+			// printf("saved_token: %s\n\n", tokens[tokens_count - 1]);
+			// print_string_array(tokens, tokens_count);
 		}
 		else if (line[i] == '\'')
 		{
@@ -99,13 +99,13 @@ char	**get_tokens(char *line, t_msh *msh_ctx, int **exeption_indexes, int *exept
 			if (msh_ctx->not_closed_quote == 1)
 				return (NULL);
 			int token_len = i - tmp_i; 
-			printf("\ni: %d, tmp_i: %d, token_len: %d", i, tmp_i, token_len);//получить длину токена 
+			// printf("\ni: %d, tmp_i: %d, token_len: %d", i, tmp_i, token_len);//получить длину токена 
 			tokens_count++;
-			printf("\n[get_tokens] tokens_count: %d\n", tokens_count);
+			// printf("\n[get_tokens] tokens_count: %d\n", tokens_count);
 			
 			if (is_exeption_token(line, tmp_i, '\''))
 			{
-				printf("\n[get_tokens] ONLY SPECIAL CHAR TOKEN\n");
+				// printf("\n[get_tokens] ONLY SPECIAL CHAR TOKEN\n");
 				exeption_indexes = int_array_realloc(exeption_indexes, exeption_indexes_n);
 				(*exeption_indexes)[*exeption_indexes_n - 1] = tokens_count - 1;
 			}
@@ -116,8 +116,8 @@ char	**get_tokens(char *line, t_msh *msh_ctx, int **exeption_indexes, int *exept
 			if (tokens[tokens_count - 1] == NULL)
 				exit(STACK_OVERFLOW);
 			single_quote_token_saver(tokens, tokens_count - 1, line, tmp_i, msh_ctx);//заполнить текущий токен
-			printf("saved_token: %s\n\n", tokens[tokens_count - 1]);
-			print_string_array(tokens, tokens_count);
+			// printf("saved_token: %s\n\n", tokens[tokens_count - 1]);
+			// print_string_array(tokens, tokens_count);
 		}
 		else if (line[i] == '|' || line[i] == '>' || line[i] == '<')
 		{
@@ -133,17 +133,17 @@ char	**get_tokens(char *line, t_msh *msh_ctx, int **exeption_indexes, int *exept
 			if (tokens[tokens_count - 1] == NULL)
 				exit(STACK_OVERFLOW);
 			special_chars_token_saver(tokens, tokens_count - 1, line, tmp_i);
-			printf("saved_token: %s\n\n", tokens[tokens_count - 1]);
-			print_string_array(tokens, tokens_count);
+			// printf("saved_token: %s\n\n", tokens[tokens_count - 1]);
+			// print_string_array(tokens, tokens_count);
 		}
 		else if (line[i] != '\0')
 		{
 			tmp_i = i;
 			i = regular_char_lexer(line, i, msh_ctx);
 			int token_len = i - tmp_i + msh_ctx->cur_env_vars_len;
-			printf("\ni: %d, tmp_i: %d, msh_ctx->cur_env_vars_len: %d, token_len: %d", i, tmp_i, msh_ctx->cur_env_vars_len, token_len);//получить длину токена 
+			// printf("\ni: %d, tmp_i: %d, msh_ctx->cur_env_vars_len: %d, token_len: %d", i, tmp_i, msh_ctx->cur_env_vars_len, token_len);//получить длину токена 
 			tokens_count++;
-			printf("\n[get_tokens] line[%d]: %c, tokens_count: %d\n", i, line[i], tokens_count);
+			// printf("\n[get_tokens] line[%d]: %c, tokens_count: %d\n", i, line[i], tokens_count);
 
 			tokens = tokens_realloc(tokens, tokens_count);//можно делать реаллок массива токенов
 			// printf("[get_tokens] %s\n", tokens[0]);
@@ -152,8 +152,8 @@ char	**get_tokens(char *line, t_msh *msh_ctx, int **exeption_indexes, int *exept
 			if (tokens[tokens_count - 1] == NULL)
 				exit(STACK_OVERFLOW);
 			regular_char_token_saver(tokens, tokens_count - 1, line, tmp_i, msh_ctx);//заполнить текущий токен
-			printf("saved_token: %s\n\n", tokens[tokens_count - 1]);
-			print_string_array(tokens, tokens_count);
+			// printf("saved_token: %s\n\n", tokens[tokens_count - 1]);
+			// print_string_array(tokens, tokens_count);
 		}
 	}
 	return (tokens);
@@ -161,10 +161,6 @@ char	**get_tokens(char *line, t_msh *msh_ctx, int **exeption_indexes, int *exept
 
 int	is_exeption_token(char *line, int tmp_i, char c)
 {
-	// if (((line[tmp_i + 1] == '|' || line[tmp_i + 1] == '>' || line[tmp_i + 1] == '<')\
-	// 	&& line[tmp_i + 2] == '\"' && (line[tmp_i + 3] == ' ' ||  line[tmp_i + 3] == '\0')) || \
-	// 	(((line[tmp_i + 1] == '>' && line[tmp_i + 2] == '>') || (line[tmp_i + 1] == '<' && line[tmp_i + 2] == '<')) && \
-	// 	line[tmp_i + 3] == '\"' && (line[tmp_i + 4] == ' ' ||  line[tmp_i + 4] == '\0')) )
 	if (((line[tmp_i + 1] == '|' || line[tmp_i + 1] == '>' || line[tmp_i + 1] == '<')\
 		&& line[tmp_i + 2] == c && (line[tmp_i + 3] == ' ' ||  line[tmp_i + 3] == '\0')) || \
 		(((line[tmp_i + 1] == '>' && line[tmp_i + 2] == '>') || (line[tmp_i + 1] == '<' && line[tmp_i + 2] == '<')) && \
@@ -172,3 +168,5 @@ int	is_exeption_token(char *line, int tmp_i, char c)
 			return (1); //TO DO добавить другие пробелы
 	return (0);
 }
+//exeption_token
+//"|" '|' "<" '<' "<<" '<<' ">" '>' ">>" '>>'

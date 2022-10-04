@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 20:54:51 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/02 14:30:18 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/04 09:57:09 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,42 @@ void	ast_node_lst_push_bottom(t_ast_node **head, t_ast_type type)
 	last_node->next = new;
 }
 
+int *fill_status_argv(char **tokens, int *t_i, t_msh *msh_ctx)
+{
+	int	*status_argv; //хранит индексы аргументов в cmd->argv (не токенов в tokens), которые являются $? (значением статуса)
+	int	status_count;
+	int	i;
+	int j;
+	int token_i;
+
+	i = -1;
+	status_count = 0;
+	status_argv = NULL;
+	while (++i < msh_ctx->exeption_indexes_n)
+	{
+		token_i = msh_ctx->exeption_indexes[i];
+		if (token_i > *t_i) //*t_i - индекс имени команды
+		{
+			if (ft_strcmp(tokens[token_i], "$?"))
+				status_count++;
+		}
+	}
+	status_argv = (int *)malloc(sizeof(int) * (status_count + 1));
+	if (!status_argv)
+		exit (STACK_OVERFLOW);
+	i = -1;
+	j = 0;
+	while (++i < msh_ctx->exeption_indexes_n)
+	{
+		token_i = msh_ctx->exeption_indexes[i];
+		if (token_i > *t_i) //*t_i - индекс имени команды
+		{
+			if (ft_strcmp(tokens[token_i], "$?"))
+				status_argv[j] = token_i - *t_i - 1;
+		}
+	}
+	return (status_argv);
+}
 
 void	ast_cmd_node_lst_push_bottom(t_ast_node **head, char **tokens, int *t_i, t_ast_type type, t_msh *msh_ctx)
 {
@@ -66,6 +102,7 @@ void	ast_cmd_node_lst_push_bottom(t_ast_node **head, char **tokens, int *t_i, t_
 		cmd = (t_ast_cmd *)malloc(sizeof(t_ast_cmd));
 		cmd->cmd_name = ft_strdup(tokens[*t_i]);
 		cmd->path = NULL;
+		cmd->status_argv = fill_status_argv(tokens, t_i, msh_ctx);
 		// path = get_cmd_path(cmd->cmd_name, msh_ctx->env);
 		// if (path) //TO DO добавить в аргументы
 		// 	cmd->path = path;

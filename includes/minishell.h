@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/02 21:51:22 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/04 09:59:01 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_msh
 {
 	t_btree	*ast; //DELETE
 	t_env	*env;
-	int		*exeption_indexes;
+	int		*exeption_indexes; //хранятся индексы токенов "|" '|' и редиректов в кавычках + внести индексы токенов $? "$?"
 	int		exeption_indexes_n;
 	int		not_closed_quote;
 	int		cur_env_vars_len; //если $USER$TERM, то токен 1, token_len = len_env1_val + len_env2_val

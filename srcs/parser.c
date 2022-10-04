@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:19:51 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/02 12:30:31 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/05 08:41:13 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,10 @@ t_ast_node *parser(char *line, t_msh *msh_ctx)
 {
 	t_ast_node *ast_nodes;
 	char	**tokens;
-	int		*exeption_indexes;
-	int		exeption_indexes_n;
 	int		tokens_count;
 	
-	exeption_indexes = NULL;
-	tokens = get_tokens(line, msh_ctx, &exeption_indexes, &exeption_indexes_n);
+	msh_ctx->exeption_indexes = NULL; //чтобы не было ошибки pointer being freed was not allocated
+	tokens = get_tokens(line, msh_ctx, &(msh_ctx->exeption_indexes), &(msh_ctx->exeption_indexes_n));
 	if (tokens == NULL)
 	{
 		printf("TOKENS == NULL\n");
@@ -29,17 +27,23 @@ t_ast_node *parser(char *line, t_msh *msh_ctx)
 	}
 	tokens_count = get_tokens_count(tokens); // printf("tokens_count: %d\n", tokens_count);
 	// printf("[parser] char *tokens[%d]: ", tokens_count); print_string_array(tokens, 0);
-	
-	msh_ctx->exeption_indexes_n = exeption_indexes_n;
-	msh_ctx->exeption_indexes = exeption_indexes;
 	// print_int_array(msh_ctx->exeption_indexes, msh_ctx->exeption_indexes_n);
 	
+	check_valid_input(tokens, tokens_count, msh_ctx);
+	if (msh_ctx->not_valid_input == 1)
+	{
+		if (msh_ctx->exeption_indexes)
+			free(msh_ctx->exeption_indexes);
+		free_string_array(tokens);
+		return (NULL);
+	}
 	// ast_nodes = NULL;
 	ast_nodes = tokens_to_ast_nodes(tokens, tokens_count, msh_ctx);
 	if (ast_nodes == NULL)
 		printf("[parser NO_NODES_LIST]\n");
-	if (exeption_indexes)
-		free(exeption_indexes);
+
+	if (msh_ctx->exeption_indexes)
+		free(msh_ctx->exeption_indexes);
 	free_string_array(tokens);
 	return (ast_nodes);
 }
@@ -70,8 +74,6 @@ char	**get_tokens(char *line, t_msh *msh_ctx, int **exeption_indexes, int *exept
 		{
 			tmp_i = i; //"
 			i = double_quotes_lexer(line, i, msh_ctx);
-			if (msh_ctx->not_closed_quote == 1)
-				return (NULL);
 			int token_len = i - tmp_i + msh_ctx->cur_env_vars_len;
 			// printf("\ni: %d, tmp_i: %d, msh_ctx->cur_env_vars_len: %d, token_len: %d", i, tmp_i, msh_ctx->cur_env_vars_len, token_len);
 			tokens_count++;
@@ -96,8 +98,6 @@ char	**get_tokens(char *line, t_msh *msh_ctx, int **exeption_indexes, int *exept
 		{
 			tmp_i = i; //'
 			i = single_quote_lexer(line, i, msh_ctx); //в случае '..''..' выделяю больше памяти чем нужно, обрезаю \0 в saver
-			if (msh_ctx->not_closed_quote == 1)
-				return (NULL);
 			int token_len = i - tmp_i; 
 			// printf("\ni: %d, tmp_i: %d, token_len: %d", i, tmp_i, token_len);//получить длину токена 
 			tokens_count++;

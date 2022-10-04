@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 09:23:29 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/02 11:39:35 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/04 19:20:01 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 //TO DO чем отличается get_env_var_value_to_saver от get_env_var_value_to_lexer?
 //оптимизировать
-int	get_env_var_value_to_saver(char **tokens, int token_n, char *line, int i, t_env **envs, t_msh *msh_ctx) //TO DO убрать из аргументов envs
+int	get_env_var_value_to_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx) //TO DO убрать из аргументов envs
 {
 	char	*var_name;
 	char	*var_value;
@@ -74,7 +74,7 @@ void	put_env_value_to_token(char *var_value, char **tokens, int token_n)
 }
 
 //чтобы узнать сколько памяти выделять при сохранении нужно прочитать env_var и запомнить value_len
-int	get_env_var_value_to_lexer(char *line, int i, t_env **envs, t_msh *msh_ctx) //TO DO убрать из аргументов envs
+int	get_env_var_value_to_lexer(char *line, int i, t_msh *msh_ctx) //TO DO убрать из аргументов envs
 {
 	char	*var_name;
 	char	*var_value;

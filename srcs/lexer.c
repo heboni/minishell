@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 14:26:06 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/02 13:09:46 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/04 22:30:40 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	regular_char_lexer(char *line, int i, t_msh *msh_ctx)
 		}
 		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\0' && line[i + 1] != '?')//04.08 fix $TERM $ HOME //11.08 fix $//2.10 fix $?
 		{
-			i = get_env_var_value_to_lexer(line, i + 1, &msh_ctx->env, msh_ctx); // i = get_env_var_value_to_lexer(line, i + 1, 0, envs);
+			i = get_env_var_value_to_lexer(line, i + 1, msh_ctx); // i = get_env_var_value_to_lexer(line, i + 1, 0, envs);
 			i++;
 			continue; //04.08 fix $TERM$HOME - должен быть 1 аргумент
 		}
@@ -51,7 +51,7 @@ int	regular_char_lexer(char *line, int i, t_msh *msh_ctx)
 
 int	special_chars_lexer(char *line, int i) //из regular_char не надо вызывать special_chars_lexer, special_chars_lexer будет 
 { // всегда вызываться на уровень выше, чтобы было корректное token_count
-	printf("%c", line[i]);
+	// printf("%c", line[i]); //4.10
 	i++;
 	if ((line[i - 1] == '>' && line[i] == '>') || (line[i - 1] == '<' && line[i] == '<'))
 	{
@@ -69,13 +69,13 @@ int	double_quotes_lexer(char *line, int i, t_msh *msh_ctx)
 		// printf("double[%d]: %c\n", i, line[i]);
 		// printf("%c", line[i]); //05.08
 		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\"' && line[i + 1] != '?') //11.08 fix "$","$ aaa"//2.10 fix "$?"
-			i = get_env_var_value_to_lexer(line, i + 1, &msh_ctx->env, msh_ctx); // i = get_env_var_value_to_lexer(line, i + 1, 0, envs); //05.08
-		else
-			printf("%c", line[i]); //05.08
+			i = get_env_var_value_to_lexer(line, i + 1, msh_ctx); // i = get_env_var_value_to_lexer(line, i + 1, 0, envs); //05.08
+		// else//4.10
+		// 	printf("%c", line[i]); //05.08 //4.10
 		if (line[i] == '\0')
 		{
 			printf("Not closed quote \"\n");
-			msh_ctx->not_closed_quote = 1;
+			msh_ctx->not_valid_input = 1;
 			return (i);// break;
 		}
 	} //TO DO в кажом if ниже возвращается i, удалить из каждого
@@ -104,11 +104,11 @@ int	single_quote_lexer(char *line, int i, t_msh *msh_ctx)
 	while (line[++i] != '\'')
 	{
 		// printf("single: %c\n", line[i]);
-		printf("%c", line[i]);
+		// printf("%c", line[i]); //4.10
 		if (line[i] == '\0')
 		{
 			printf("Not closed quote \'\n");
-			msh_ctx->not_closed_quote = 1;
+			msh_ctx->not_valid_input = 1;
 			return (i);// break;
 		}
 	} //TO DO в кажом if ниже возвращается i, удалить из каждого

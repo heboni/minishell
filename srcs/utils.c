@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:17:05 by heboni            #+#    #+#             */
-/*   Updated: 2022/09/30 23:49:08 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/04 19:31:36 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ void	print_int_array(int *array, int n)
 	int	i;
 
 	i = -1;
-	printf(" [print_special_indexes_int_array]\n");
+	printf("[print_special_indexes_int_array] ");
 	while (++i < n)
 		printf("%d ", array[i]);
-	printf(" [print_special_indexes_int_array] END\n");
+	printf("\n[print_special_indexes_int_array] END\n");
 }
 
 int get_tokens_count(char **tokens)

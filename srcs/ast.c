@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 20:54:51 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/04 09:57:09 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/04 19:53:58 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	ast_node_lst_push_bottom(t_ast_node **head, t_ast_type type)
 {
 	t_ast_node	*new;
 	t_ast_node	*last_node;
-	t_ast_cmd	*cmd;
 
 	new = (t_ast_node *)malloc(sizeof(t_ast_node));
 	if (new == NULL)
@@ -69,6 +68,8 @@ int *fill_status_argv(char **tokens, int *t_i, t_msh *msh_ctx)
 				status_count++;
 		}
 	}
+	if (status_count == 0)
+		return (NULL);
 	status_argv = (int *)malloc(sizeof(int) * (status_count + 1));
 	if (!status_argv)
 		exit (STACK_OVERFLOW);
@@ -80,9 +81,13 @@ int *fill_status_argv(char **tokens, int *t_i, t_msh *msh_ctx)
 		if (token_i > *t_i) //*t_i - индекс имени команды
 		{
 			if (ft_strcmp(tokens[token_i], "$?"))
+			{
 				status_argv[j] = token_i - *t_i - 1;
+				j++;
+			}	
 		}
 	}
+	status_argv[++j] = -100;
 	return (status_argv);
 }
 
@@ -91,7 +96,7 @@ void	ast_cmd_node_lst_push_bottom(t_ast_node **head, char **tokens, int *t_i, t_
 	t_ast_node	*new;
 	t_ast_node	*last_node;
 	t_ast_cmd	*cmd;
-	char		*path;
+	// char		*path;
 
 	new = (t_ast_node *)malloc(sizeof(t_ast_node));
 	if (new == NULL)
@@ -102,7 +107,8 @@ void	ast_cmd_node_lst_push_bottom(t_ast_node **head, char **tokens, int *t_i, t_
 		cmd = (t_ast_cmd *)malloc(sizeof(t_ast_cmd));
 		cmd->cmd_name = ft_strdup(tokens[*t_i]);
 		cmd->path = NULL;
-		cmd->status_argv = fill_status_argv(tokens, t_i, msh_ctx);
+		// cmd->status_argv = fill_status_argv(tokens, t_i, msh_ctx);
+		
 		// path = get_cmd_path(cmd->cmd_name, msh_ctx->env);
 		// if (path) //TO DO добавить в аргументы
 		// 	cmd->path = path;
@@ -235,6 +241,16 @@ void	print_nodes_list(t_ast_node *ast_nodes)
 					}
 					printf("\n");
 				}
+				// if (cmd->status_argv)
+				// {
+				// 	int *status_argv = cmd->status_argv;
+				// 	while (*status_argv != -100)
+				// 	{
+				// 		printf("%d, ", *status_argv);
+				// 		status_argv++;
+				// 	}
+				// 	printf("\n");
+				// }
 			}
 		}
 		ast_nodes = ast_nodes->next;

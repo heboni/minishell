@@ -18,6 +18,7 @@ SRCS_FILES	= main.c							\
 			  parser.c							\
 			  lexer.c							\
 			  token_saver.c						\
+			  check_input.c 					\
 			  array_realloc.c 					\
 			  envs_lst_saver.c					\
 			  envs_lst_utils.c					\
@@ -41,7 +42,6 @@ OBJS		= $(addprefix $(BUILD_DIR), $(OBJS_FILES))
 DEPS		= $(OBJS:.o=.d)
 
 CC			= gcc
-# CFLAGS		= -MMD
 CFLAGS		= -Wall -Werror -Wextra -MMD
 LIBS		= -lreadline
 

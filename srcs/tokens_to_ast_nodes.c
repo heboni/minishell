@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:32:22 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/02 13:17:47 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/04 20:31:03 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ t_ast_node *tokens_to_ast_nodes(char **tokens, int tokens_count, t_msh *msh_ctx)
 	return (ast_nodes);
 }
 
-//is_in_exception_indexes - если его порядковый номер не внесен в exeption_indexes, 
-//т.е. он не является одним из "|" '|' "<" '<' "<<" '<<' ">" '>' ">>" '>>'
+//is_in_exception_indexes - если его порядковый номер внесен в exeption_indexes, 
+//т.е. он является одним из "|" '|' "<" '<' "<<" '<<' ">" '>' ">>" '>>'
 int	is_in_exception_indexes(int *exeption_indexes, int exeption_indexes_n, int token_i)
 {
 	int	i;

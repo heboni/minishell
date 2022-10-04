@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 22:15:23 by heboni            #+#    #+#             */
-/*   Updated: 2022/09/30 18:13:46 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/04 19:25:01 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ int	is_equal_symbol(char *argv)
 	return (0);
 }
 
-void	add_var_from_env(t_env *envs, char *argv)
-{
+// void	add_var_from_env(t_env *envs, char *argv)
+// {
 	
-}
+// }
 
 //env должен распечатывать переменные как в случае добавления новой, так и в случае вызова без аргументов
 // TO DO env TEST=test
@@ -49,7 +49,7 @@ int	env_builtin(t_env *envs, char **argv, int fd)
 {
 	char	**tmp_argv;
 	char	*name;
-	char	*value;
+	// char	*value;
 	int		i;
 	int		k;
 	

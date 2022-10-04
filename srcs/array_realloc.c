@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 07:45:13 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/01 11:01:23 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/04 19:18:09 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ int	**int_array_realloc(int **array, int *array_n)
 char	**tokens_realloc(char **tokens, int tokens_count)
 {
 	char	**tmp_tokens;
-	int		token_len;
 	int		i;
 	
 	i = -1;

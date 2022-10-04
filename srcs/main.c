@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 22:35:10 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/02 23:51:32 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/04 22:33:24 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ int	main(int argc, char **argv, char **env)
 		if (!line)
 			break ;
 
-		msh_ctx->not_closed_quote = 0;
+		msh_ctx->not_closed_quote = 0; msh_ctx->not_valid_input = 0;
 		ast_nodes = parser(line, msh_ctx);
 		free(line);
-		if (ast_nodes == NULL || msh_ctx->not_closed_quote == 1)
+		if (ast_nodes == NULL || msh_ctx->not_valid_input == 1)
 			continue;
 		printf("\n[main] "); print_nodes_list(ast_nodes);
 		free_nodes_lst(&ast_nodes);

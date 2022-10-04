@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/04 09:59:01 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/05 08:41:33 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_msh
 	int		*exeption_indexes; //хранятся индексы токенов "|" '|' и редиректов в кавычках + внести индексы токенов $? "$?"
 	int		exeption_indexes_n;
 	int		not_closed_quote;
+	int		not_valid_input; //TO DO объединить с not_closed_quote
 	int		cur_env_vars_len; //если $USER$TERM, то токен 1, token_len = len_env1_val + len_env2_val
 }				t_msh;
 
@@ -53,6 +54,9 @@ char		*get_prompt(void);
 t_ast_node	*parser(char *line, t_msh *msh_ctx);
 char		**get_tokens(char *line, t_msh *msh_ctx, int **special_indexes, int *special_indexes_n);
 int			is_exeption_token(char *line, int tmp_i, char c);
+
+//check_input.c
+void		check_valid_input(char **tokens, int t_count, t_msh *msh_ctx);
 
 // array_realloc
 char		**tokens_realloc(char **tokens, int tokens_count);
@@ -94,8 +98,8 @@ void		print_int_array(int *array, int n);
 
 
 // get_env
-int		get_env_var_value_to_saver(char **tokens, int token_n, char *line, int i, t_env **envs, t_msh *msh_ctx);
-int		get_env_var_value_to_lexer(char *line, int i, t_env **envs, t_msh *msh_ctx);
+int		get_env_var_value_to_lexer(char *line, int i, t_msh *msh_ctx);
+int		get_env_var_value_to_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
 char	*get_env_value_by_name_from_envs(void *name, t_env *envs, t_msh *msh_ctx);
 // char	*get_env_value_by_name_from_envs(void *name, t_env **envs, t_msh *msh_ctx);
 

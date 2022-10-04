@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 07:39:35 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/02 11:36:23 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/04 19:22:23 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	double_quotes_token_saver(char **tokens, int token_n, char *line, int i, t_
 	{
 		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\"' && line[i + 1] != '?')
 		{
-			i = get_env_var_value_to_saver(tokens, token_n, line, i + 1, &msh_ctx->env, msh_ctx);
+			i = get_env_var_value_to_saver(tokens, token_n, line, i + 1, msh_ctx);
 			// printf("\n[double_quotes_token_saver] tokens[token_n]=%s\n", tokens[token_n]);
 			k = ft_strlen(tokens[token_n]) - 1; ////10.09 echo "''' $USER   ''"
 			// i++; //19.09 "$USER" переходим на ", в while переходим на '\0' //для каких кейсов этот переход нужен
@@ -125,7 +125,7 @@ void	regular_char_token_saver(char **tokens, int token_n, char *line, int i, t_m
 		}
 		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\0' && line[i + 1] != '?')//04.08 fix $TERM $ HOME //11.08 fix $
 		{
-			i = get_env_var_value_to_saver(tokens, token_n, line, i + 1, &msh_ctx->env, msh_ctx);
+			i = get_env_var_value_to_saver(tokens, token_n, line, i + 1, msh_ctx);
 			// i = get_env_var_value(line, i + 1, 0, envs);
 			i++;
 			continue; //04.08 fix $TERM$HOME - должен быть 1 аргумент

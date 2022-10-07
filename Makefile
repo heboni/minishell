@@ -5,8 +5,6 @@ HEAD_DIR	= includes/
 BUILD_DIR	= build/
 
 SRCS_FILES	= main.c							\
-			  btree/btree_apply_prefix.c		\
-			  btree/btree_create_node.c			\
 			  libft/ft_strlen.c 				\
 			  libft/ft_strcpy.c					\
 			  libft/ft_strcmp.c					\
@@ -32,8 +30,8 @@ SRCS_FILES	= main.c							\
 			  unset.c 							\
 			  utils.c							\
 			  free_utils.c 						\
-			  test_ast.c						\
-			  tests.c
+			#   btree/btree_apply_prefix.c		\
+			  btree/btree_create_node.c			\
 
 OBJS_FILES	= $(SRCS_FILES:.c=.o)
 

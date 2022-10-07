@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 08:40:26 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/05 08:56:23 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/05 18:11:03 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	pipe_is_first_or_last(char **tokens, int t_count, t_msh *msh_ctx)
 	if (is_real_special_token(msh_ctx, tokens, 0, "|") || \
 			is_real_special_token(msh_ctx, tokens, t_count - 1, "|"))
 	{
-		ft_putstr_fd("bash: syntax error near unexpected token \'|\'\n", 1);
+		ft_putstr_fd("bash: syntax error near unexpected token \'|\'\n", 2);
 		msh_ctx->not_valid_input = 1;
 		is = 1;
 	}
@@ -61,14 +61,14 @@ int	no_regular_after_redirect(t_msh *msh_ctx, char **tokens, \
 		if (t_i + 1 == t_count)
 		{
 			ft_putstr_fd("bash: syntax error near unexpected \
-										token \'newline\'\n", 1);
+										token \'newline\'\n", 2);
 			msh_ctx->not_valid_input = 1;
 			return (1);
 		}
 		if (is_special_token(tokens, t_i + 1, \
 					msh_ctx->exeption_indexes, msh_ctx->exeption_indexes_n))
 		{
-			ft_putstr_fd("bash: syntax error near unexpected token \'>\'\n", 1);
+			ft_putstr_fd("bash: syntax error near unexpected token \'>\'\n", 2);
 			msh_ctx->not_valid_input = 1;
 			return (1);
 		}
@@ -91,7 +91,7 @@ void	check_valid_input(char **tokens, int t_count, t_msh *msh_ctx)
 					is_real_special_token(msh_ctx, tokens, i - 1, "|"))
 			{
 				ft_putstr_fd("bash: syntax error near unexpected \
-													token \'|\'\n", 1);
+													token \'|\'\n", 2);
 				msh_ctx->not_valid_input = 1;
 				return ;
 			}

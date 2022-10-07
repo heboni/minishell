@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 20:54:51 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/04 19:53:58 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/06 22:17:29 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,12 +137,13 @@ char	**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx)
 	int		argv_count;
 	int		tmp_i;
 
+	(*token_i)--;
 	argv_count = 0;
 	argv = NULL; //тогда передадим cmd->argv NULL в env
 	tmp_i = *token_i;
 	tokens_count = get_tokens_count(tokens);
 	// printf("[get_cmd_node_argv] *token_i = %d, tokens_count = %d\n", *token_i, tokens_count);
-	while (++(*token_i) < tokens_count) //с токена-команды переходим на токен-0-аргумент до конца line или до спец.токена
+	while (++(*token_i) < tokens_count) //argv[0] - the name of the executed program (for example, the last component of path)
 	{
 		if (is_special_token(tokens, *token_i, msh_ctx->exeption_indexes, msh_ctx->exeption_indexes_n))
 			break;
@@ -160,7 +161,7 @@ char	**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx)
 	int i = -1;
 	while (++i < argv_count)
 	{
-		argv[i] = strdup(tokens[++tmp_i]);
+		argv[i] = ft_strdup(tokens[++tmp_i]);
 		// printf("[get_cmd_node_argv] argv[%d]=%s\n", i, argv[i]);
 	}
 	argv[i] = NULL;

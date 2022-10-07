@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 01:53:53 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/02 23:54:21 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/06 22:18:13 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	*get_prompt(void)
 	home = getenv("HOME");
 	getcwd(cwd, 999);
 	cwd_start = 0;
-	if (strncmp(cwd, home, ft_strlen(home)) == 0)
+	if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)
 	{
 		cwd_start = ft_strlen(home) - 1;
 		cwd[cwd_start] = '~';

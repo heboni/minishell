@@ -6,49 +6,11 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 09:49:28 by heboni            #+#    #+#             */
-/*   Updated: 2022/09/24 11:56:15 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/09 16:42:06 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "minishell.h"
-# include <stdio.h> //del
-# include <unistd.h> //del
-
-
-size_t	ft_strlen(const char *s) //del
-{
-	size_t	len;
-
-	len = 0;
-	while (*s)
-	{
-		len++;
-		s++;
-	}
-	return (len);
-}
-
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	size_t			i;
-	unsigned char	c1;
-	unsigned char	c2;
-
-	i = 0;
-	while (s1[i] == s2[i])
-	{
-		if (s1[i] == '\0')
-			return (0);
-		i++;
-	}
-	if (s1[i] == '\200' && s2[i] == '\0')
-		return (1);
-	if (s1[i] == '\0' && s2[i] == '\200')
-		return (1);
-	c1 = s1[i];
-	c2 = s2[i];
-	return (c1 - c2);
-}
+#include "minishell.h"
 
 char	*get_echo_delimiter(char **argv, int n_flag)
 {
@@ -93,10 +55,10 @@ int	echo(char **argv, int fd)
 	return (0);
 }
 
-int	main(void)
-{
-	char	*argv[4] = {"-", "ab", NULL, NULL};
+// int	main(void)
+// {
+// 	char	*argv[4] = {"-", "ab", NULL, NULL};
 
-	echo(argv, 1);
-	return (0);
-}
+// 	echo(argv, 1);
+// 	return (0);
+// }

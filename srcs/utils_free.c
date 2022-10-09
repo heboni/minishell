@@ -6,46 +6,49 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 08:44:50 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/09 13:23:08 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/09 23:56:58 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_nodes_lst(t_node **ast_nodes)
+void	free_nodes_lst(t_node **node)
 {
 	t_node *next;
 	
-	printf("[free_nodes_lst]\n");
-	if (!ast_nodes)
+	// printf("[free_nodes_lst]\n");
+	if (!node)
 	{
 		printf("[free_nodes_lst END NO AST_NODES]\n");
 		return ;
 	}
-	while (*ast_nodes)
+	while (*node)
 	{
-		next = (*ast_nodes)->next;
-		if ((*ast_nodes)->data) //TO DO с такими комментариями была ошибка освобождения чужой памяти с вводом  a | | <
+		next = (*node)->next;
+		if ((*node)->cmd_name)
 		{
-			if ((*ast_nodes)->type == MSH_CMD)
-			{
-				t_ast_cmd *cmd = (t_ast_cmd *)(*ast_nodes)->data;
-				free(cmd->cmd_name); printf("free cmd_name\n");
-				if (cmd->path)
-				{
-					free(cmd->path); printf("free cmd->path\n");
-				}
-				if (cmd->argv)
-				{
-					free_string_array(cmd->argv); printf("free cmd->argv\n");
-				}
-			}
-			free((*ast_nodes)->data); printf("free (*ast_nodes)->data\n");
+			free((*node)->cmd_name); //printf("free cmd_name\n");
 		}
-		free(*ast_nodes); printf("free *ast_nodes\n");
-		*ast_nodes = next;
+		if ((*node)->path)
+		{
+			free((*node)->path); //printf("free cmd->path\n");
+		}
+		if ((*node)->argv)
+		{
+			free_string_array((*node)->argv); //printf("free cmd->argv\n");
+		}
+		if ((*node)->r_f)
+			free((*node)->r_f);
+		if ((*node)->rr_f)
+			free((*node)->rr_f);
+		if ((*node)->l_f)
+			free((*node)->l_f);
+		if ((*node)->ll_f)
+			free((*node)->ll_f);
+		free(*node); //printf("free *node\n");
+		*node = next;
 	}
-	printf("[free_nodes_lst END]\n");
+	// printf("[free_nodes_lst END]\n");
 }
 
 void	lstclear(t_node **lst)

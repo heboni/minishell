@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/09 12:49:03 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/10 00:04:15 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <errno.h>
-# include <string.h> //разрешен?
+# include <string.h>
 
 # include "libft.h"
-# include "msh_ast.h"
+# include "msh_node.h"
 # include "env.h"
 
 # define STACK_OVERFLOW -1
@@ -41,14 +41,18 @@ typedef struct s_msh
 {
 	// t_btree	*ast; //DELETE
 	t_node	*node;
-	t_env	*env;
+	t_env	*env_lst;
 	char	**envs;
 	int		status;
 	int		tokens_count;
 	int		*exeption_indexes; //хранятся индексы токенов "|" '|' и редиректов в кавычках + внести индексы токенов $? "$?"
 	int		exeption_indexes_n;
-	int		not_valid_input; //TO DO объединить с not_closed_quote
+	int		not_valid_input;
 	int		cur_env_vars_len; //если $USER$TERM, то токен 1, token_len = len_env1_val + len_env2_val
+	int		p_r;
+	int		p_wr;
+	int		is_stdin_pipe;
+	int		is_stdout_pipe;
 }				t_msh;
 
 
@@ -86,8 +90,8 @@ int			is_in_exception_indexes(t_msh *msh_ctx, int token_i);
 void		print_nodes_list(t_node *ast_nodes);
 int			is_special_token(char **tokens, int t_i, t_msh *msh_ctx);
 int			is_special_symbols(char *token);
-void		ast_node_lst_push_bottom(t_node **head, t_ast_type type);
-void		ast_cmd_node_lst_push_bottom(t_node **head, char **tokens, int *i, t_ast_type type, t_msh *msh_ctx);
+void		ast_node_lst_push_bottom(t_node **head, t_redirect_type type);
+void		node_lst_push_bottom(t_node **head, char **tokens, int *t_i, t_msh *msh_ctx);
 t_node		*get_last_ast_node(t_node *head);
 char		**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx, t_node *new);
 char		**get_cmd_node_argv0(char **tokens, int *token_i, t_msh *msh_ctx);
@@ -100,11 +104,14 @@ int			redir_token_handler(char **tokens, int *t_i, t_msh *msh_ctx, t_node *new);
 // get_env
 int		get_env_var_value_to_lexer(char *line, int i, t_msh *msh_ctx);
 int		get_env_var_value_to_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
-char	*get_env_value_by_name_from_envs(void *name, t_env *envs, t_msh *msh_ctx);
+char	*get_env_value_by_name_from_envs(void *name, t_msh *msh_ctx);
 // char	*get_env_value_by_name_from_envs(void *name, t_env **envs, t_msh *msh_ctx);
 
 // get_cmd_path
-char	*get_cmd_path(char	*md_name, t_env *env);
+char	*get_cmd_path(char *cmd_name, t_msh *msh_ctx);
+
+//executor
+void	executor(t_msh *msh_ctx);
 
 // buildins
 int		env_builtin(t_env *envs, char **argv, int fd);

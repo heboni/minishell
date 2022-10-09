@@ -10,9 +10,18 @@ SRCS_FILES	= main.c							\
 			  libft/ft_strcmp.c					\
 			  libft/ft_strncmp.c				\
 			  libft/ft_strdup.c					\
+			  libft/ft_strjoin_3.c				\
 			  libft/ft_putstr_fd.c				\
 			  libft/ft_isalpha.c				\
 			  libft/ft_isdigit.c 				\
+			  libft/ft_strchr.c 				\
+			  builtins/cd.c 					\
+			  builtins/echo.c 					\
+			  builtins/env.c 					\
+			  builtins/exit.c 					\
+			  builtins/export.c 				\
+			  builtins/pwd.c 					\
+			  builtins/unset.c 					\
 			  parser.c							\
 			  lexer.c							\
 			  token_saver.c						\
@@ -21,14 +30,12 @@ SRCS_FILES	= main.c							\
 			  envs_lst_saver.c					\
 			  envs_lst_utils.c					\
 			  get_env.c 						\
-			  tokens_to_ast_nodes.c 			\
-			  ast_exec.c						\
+			  tokens_to_cmd_nodes.c 			\
 			  node.c							\
+			  get_cmd_path.c 					\
 			  redirect.c						\
 			  prompt.c							\
-			  env.c 							\
-			  export.c 							\
-			  unset.c 							\
+			  executor.c 						\
 			  utils.c							\
 			  utils_special.c					\
 			  utils_free.c 						\

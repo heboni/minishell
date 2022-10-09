@@ -6,14 +6,11 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 13:20:05 by heboni            #+#    #+#             */
-/*   Updated: 2022/09/24 21:50:53 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/09 16:41:37 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "minishell.h"
-# include <stdio.h> //del
-# include <unistd.h> //del
-# include <stdlib.h> //del
+#include "minishell.h"
 
 int	cd(char **argv) //getcwd, chdir //with only a relative or absolute path 
 {
@@ -31,7 +28,7 @@ int	cd(char **argv) //getcwd, chdir //with only a relative or absolute path
 }
 //chdir: In order for a directory to become the current directory, a process must have execute (search) access to the directory.
 
-
+/*
 int	main(void)
 {
 	// char *argv[2] = {"/Users/ekaterinasvincickaa/Documents/21_school/21school-main/minishell/42_minishell/srcs/libft", NULL};
@@ -47,3 +44,4 @@ int	main(void)
 	printf("\n%s\n", dir);
 	return (0);
 }
+*/

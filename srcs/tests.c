@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 01:54:57 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/09 12:40:38 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/09 21:04:18 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ int	redirect_in()
 		{
 			ft_putstr_fd("Execve error: could not find programm to execute", 2);
 			ft_putstr_fd(strerror(errno), 2); ft_putstr_fd("\n", 2);
-			return (-2);
+			return (-2); //exit(-2);
 		}
 	}
 	else
@@ -329,8 +329,8 @@ int	main(int argc, char **argv, char **env)
 	// just_cmd(env);
 	// redirect_out(env);
 	// redirect_in();
-	// pipe_();
-	// pipe_test(env);
+	pipe_();
+	pipe_test(env);
 	// just_relative_cmd();
 	
 	many_pipes();

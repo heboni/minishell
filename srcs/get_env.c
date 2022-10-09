@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 09:23:29 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/04 19:20:01 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/09 15:51:47 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	get_env_var_value_to_saver(char **tokens, int token_n, char *line, int i, t_
 	if (var_name == NULL)
 		exit(STACK_OVERFLOW);
 	get_env_name_from_line(&var_name, line, tmp_i); // printf("\nvar_len %d, var_name: %s\n", var_len, var_name);
-	var_value = get_env_value_by_name_from_envs(var_name, msh_ctx->env, msh_ctx);
+	var_value = get_env_value_by_name_from_envs(var_name, msh_ctx);
 	free(var_name);
 
 	put_env_value_to_token(var_value, tokens, token_n);
@@ -94,7 +94,7 @@ int	get_env_var_value_to_lexer(char *line, int i, t_msh *msh_ctx) //TO DO убр
 	if (var_name == NULL)
 		exit(STACK_OVERFLOW);
 	get_env_name_from_line(&var_name, line, tmp_i);
-	var_value = get_env_value_by_name_from_envs(var_name, msh_ctx->env, msh_ctx); //зачем нужен этот вызов?
+	var_value = get_env_value_by_name_from_envs(var_name, msh_ctx); //зачем нужен этот вызов?
 	//printf("%s", var_value);
 	free(var_name);
 	return (i - 1);
@@ -118,13 +118,13 @@ void	get_env_name_from_line(char **var_name, char *line, int tmp_i)
 	(*var_name)[j] = '\0';
 }
 
-char	*get_env_value_by_name_from_envs(void *name, t_env *envs, t_msh *msh_ctx)
+char	*get_env_value_by_name_from_envs(void *name, t_msh *msh_ctx)
 {
 	t_env	*tmp;
 
-	if (!envs)
+	if (!msh_ctx->env_lst)
 		return NULL;
-	tmp = envs; //можно ли обойись без tmp, идти по envs
+	tmp = msh_ctx->env_lst; //можно ли обойись без tmp, идти по envs
 	while (tmp)
 	{
 		if (ft_strcmp((char *)name, (char *)tmp->var_name) == 0)

@@ -1,35 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/10 14:53:11 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/09 16:05:41 by heboni           ###   ########.fr       */
+/*   Created: 2021/10/10 18:46:23 by heboni            #+#    #+#             */
+/*   Updated: 2022/10/09 16:05:37 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t			i;
-	unsigned char	c1;
-	unsigned char	c2;
+	char	*s_buf;
+	char	cc;
 
-	i = 0;
-	while (s1[i] == s2[i])
+	cc = c;
+	s_buf = (char *)s;
+	while (*s_buf)
 	{
-		if (s1[i] == '\0')
-			return (0);
-		i++;
+		if (*s_buf == cc)
+			return (s_buf);
+		s_buf++;
 	}
-	if (s1[i] == '\200' && s2[i] == '\0')
-		return (1);
-	if (s1[i] == '\0' && s2[i] == '\200')
-		return (1);
-	c1 = s1[i];
-	c2 = s2[i];
-	return (c1 - c2);
+	if (c == '\0')
+		return (s_buf);
+	return (((void *)0));
 }

@@ -6,36 +6,33 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 20:54:51 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/09 13:49:57 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/10 00:06:33 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//TO DO: отказаться от t_ast_type type
-void	ast_cmd_node_lst_push_bottom(t_node **head, char **tokens, int *t_i, t_ast_type type, t_msh *msh_ctx)
+void	node_lst_push_bottom(t_node **head, char **tokens, int *t_i, t_msh *msh_ctx)
 {
 	t_node	*new;
 	t_node	*last_node;
-	// char		*path;
 	
-	// printf("[ast_cmd_node_lst_push_bottom] START\n");
+	// printf("[node_lst_push_bottom] START\n");
 	new = (t_node *)malloc(sizeof(t_node));
 	if (new == NULL)
 		exit(STACK_OVERFLOW);
-	new->type = type;
 	new->fd_in = STDIN_FILENO;
 	new->fd_out = STDOUT_FILENO;
-	
+	new->status = 0;
 	new->r_f = NULL; new->rr_f = NULL; new->l_f = NULL; new->ll_f = NULL;
-	while (*t_i < msh_ctx->tokens_count && redir_token_handler(tokens, t_i, msh_ctx, new)) //отправили первый > //после выполнения этой ф уже на файле стоим
+	while (*t_i < msh_ctx->tokens_count && new->status == 0 && redir_token_handler(tokens, t_i, msh_ctx, new)) //отправили первый > //после выполнения этой ф уже на файле стоим
 	{//переходим с файла на следующий редир, либо на команду, тогда redir_token_handler вернет 0 в след. витке
 		(*t_i)++;
 	}
 	new->cmd_name = NULL;
 	if (*t_i < msh_ctx->tokens_count)
 		new->cmd_name = ft_strdup(tokens[*t_i]);
-	new->path = NULL; //внутри сделать проверку, if (new->cmd_name == NULL) return (NULL);
+	new->path = get_cmd_path(new->cmd_name, msh_ctx);
 	new->argv = get_cmd_node_argv(tokens, t_i, msh_ctx, new); //должен возвращать NULL если нет argv +
 	//если встретили редирект, вызывает фу-ю обработки редиректа (вынести верхнее туда)
 	//до формирования cmd_name также надо вызвать тк команда мб "> file4 echo abc"
@@ -43,13 +40,13 @@ void	ast_cmd_node_lst_push_bottom(t_node **head, char **tokens, int *t_i, t_ast_
 	new->next = NULL;
 	if (!*head)
 	{
-		*head = new; // printf("[ast_cmd_node_lst_push_bottom] END\n\n");
+		*head = new; // printf("[node_lst_push_bottom] END\n\n");
 		return ;
 	}
 	
 	last_node = get_last_ast_node(*head);
 	last_node->next = new;
-	// printf("[ast_cmd_node_lst_push_bottom] END\n\n");
+	// printf("[node_lst_push_bottom] END\n\n");
 	return ;
 }
 
@@ -87,7 +84,7 @@ char	**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx, t_node *ne
 	int i = 0; int j = -1;
 	while (++j < t_count)
 	{
-		while (++tmp_i < msh_ctx->tokens_count && redir_token_handler(tokens, &tmp_i, msh_ctx, new)) {}
+		while (++tmp_i < msh_ctx->tokens_count && new->status == 0 && redir_token_handler(tokens, &tmp_i, msh_ctx, new)) {}
 		//отправили первый > //после выполнения этой ф уже на файле стоим
 		//переходим с файла на следующий редир, либо на команду, тогда redir_token_handler вернет 0 в след. витке
 		if (argv && i < argv_count)
@@ -161,14 +158,11 @@ void	print_nodes_list(t_node *node)
 	printf("[print_nodes_list]\n");
 	while (node)
 	{
-		printf("type: %u ", node->type);
+		printf("node:   ");
 		if (node->type == MSH_CMD)
 		{
 			printf("CMD->NAME: %s\n", node->cmd_name);
-			printf("        r_f: %s\n", node->r_f);
-			printf("        rr_f: %s\n", node->rr_f);
-			printf("        l_f: %s\n", node->l_f);
-			printf("        ll_f: %s\n", node->ll_f);
+			printf("        CMD->PATH: %s\n", node->path);
 			if (node->argv)
 			{
 				char **cmd_argv = node->argv;
@@ -180,6 +174,10 @@ void	print_nodes_list(t_node *node)
 				}
 				printf("\n");
 			}
+			printf("        r_f: %s\n", node->r_f);
+			printf("        rr_f: %s\n", node->rr_f);
+			printf("        l_f: %s\n", node->l_f);
+			printf("        ll_f: %s\n", node->ll_f);
 		}
 		node = node->next;
 	}

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokens_to_ast_nodes.c                              :+:      :+:    :+:   */
+/*   tokens_to_cmd_nodes.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:32:22 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/09 13:49:23 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/10 00:04:36 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_node *tokens_to_ast_nodes(char **tokens, int tokens_count, t_msh *msh_ctx)
 		if (ft_strcmp(tokens[token_i], "|") == 0 && !is_in_exception_indexes(msh_ctx, token_i))
 			continue;
 		else
-			ast_cmd_node_lst_push_bottom(&ast_nodes, tokens, &token_i, MSH_CMD, msh_ctx);
+			node_lst_push_bottom(&ast_nodes, tokens, &token_i, msh_ctx);
 		//в аргументы нужно сложить все токены до 1-го | кроме редиректов и связанных с ними файлов
 		// printf("tokens[%d]: %s\n", token_i, tokens[token_i]);
 	}

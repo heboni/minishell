@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_utils.c                                       :+:      :+:    :+:   */
+/*   utils_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 08:44:50 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/01 11:34:33 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/09 13:23:08 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_nodes_lst(t_ast_node **ast_nodes)
+void	free_nodes_lst(t_node **ast_nodes)
 {
-	t_ast_node *next;
+	t_node *next;
 	
 	printf("[free_nodes_lst]\n");
 	if (!ast_nodes)
@@ -48,9 +48,9 @@ void	free_nodes_lst(t_ast_node **ast_nodes)
 	printf("[free_nodes_lst END]\n");
 }
 
-void	lstclear(t_ast_node **lst)
+void	lstclear(t_node **lst)
 {
-	t_ast_node	*next;
+	t_node	*next;
 
 	if (!lst)
 		return ;

@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:35:27 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/02 14:37:42 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/08 09:37:21 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,21 @@ typedef enum s_ast_type
 
 # define MSH_AST_TYPE_CNT MSH_AST_TYPE_END
 
-typedef struct s_ast_node
+typedef struct s_node
 {
-	t_ast_type	type;
-	int			fd_in;
+	t_ast_type	type;  //TO DO delete
+	int			fd_in; //изначально инициировать как STDIN и STDOUT //если в ноде есть редиректы, то заменять
 	int			fd_out;
-	void		*data; //t_ast_pipe  //t_ast_cmd
-	struct s_ast_node	*next;
-}				t_ast_node;
+	char		*cmd_name;
+	char		*path;
+	char		**argv;
+	char		*r_f;
+	char		*rr_f;
+	char		*l_f;
+	char		*ll_f;
+	void		*data; //TO DO delete
+	struct s_node	*next;
+}				t_node;
 
 typedef struct s_ast_pipe
 {
@@ -54,6 +61,6 @@ void		ast_exec(t_btree *root);
 void		ast_exec_node(t_btree *node);
 void		dup_check(int fd, int oldfd);
 void		close_check(int fd);
-t_ast_node	*ast_create_node(t_ast_type type, void *data);
+t_node	*ast_create_node(t_ast_type type, void *data);
 
 #endif

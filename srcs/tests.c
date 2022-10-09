@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 01:54:57 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/07 10:14:00 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/09 12:40:38 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,13 @@ void	pipe_()
 	pipe_right(pipefd, argv_right);
 }
 
+void	many_pipes()
+{
+	int	pipe_n;
+	int	pipefd[2]; //одной хватит, тк в каждом процессе клонируется
+	
+	
+}
 
 void	just_cmd(char **env)
 {
@@ -196,17 +203,18 @@ int	redirect_in()
 
 	if (pid == 0)
 	{
-		int fd = open("srcs/test_stdin", O_RDONLY, 0644); // int fd = open("test_stdin", O_RDONLY, 0644);
+		int fd = open("srcs/test_stdin1", O_RDONLY, 0644); // int fd = open("test_stdin", O_RDONLY, 0644);
 		if (fd == -1)
 		{
-			ft_putstr_fd(strerror(errno), 2); ft_putstr_fd("\n", 2);
-			return (-3);
+			ft_putstr_fd(strerror(errno), 2); 
+			ft_putstr_fd("\n", 2);
+			exit(-3);
 		}
 		int fdd = dup2(fd, 0); //fdd = 0
 		if (fdd == -1)
 		{
 			ft_putstr_fd(strerror(errno), 2); ft_putstr_fd("\n", 2);
-			return (-4);
+			exit(-4);
 		}
 		close(fd);
 		int res = execve("/bin/cat", argv, NULL); //имитирую работу команды cat без параметров, в терминале ждет заполнения STDIN, тут должен считать из файла
@@ -219,7 +227,18 @@ int	redirect_in()
 	}
 	else
 	{
-		waitpid(pid, NULL, 0);
+		int	w_status;
+		waitpid(pid, &w_status, 0);
+		if (WIFEXITED(w_status))
+		{
+			int w_code = WEXITSTATUS(w_status); //переменной-статусу присваивать w_code
+			if (w_code == 0 )
+				ft_putstr_fd("\nSUCCESS after waitpid\n", 1);
+			else
+				ft_putstr_fd("\nFAILURE with wait_status_code\n", 2);
+			printf("w_status=%d,  w_code %d\n", w_status, w_code);
+			
+		}
 	}
 	return (0);
 }
@@ -280,23 +299,24 @@ int	just_relative_cmd()
 		if (res < 0)
 		{
 			printf("\nEXECVE FAILURE code = %d", res);
-			ft_putstr_fd("\nEXECVE FAILURE\n", 2);
-			return (127);
+			ft_putstr_fd("bash: No such file or directory\n", 2);
+			exit (127);
 		}
 			
 	}
 	else
 	{
 		int	w_status;
-		waitpid(pid, &w_status, 0); //почему w_code==0, хотя на самом деле не выполняется "/program" и в bash echo $? в таком случае 
+		waitpid(pid, &w_status, 0);
 		if (WIFEXITED(w_status))
 		{
-			int w_code = WEXITSTATUS(w_status);
+			int w_code = WEXITSTATUS(w_status); //переменной-статусу присваивать w_code
 			if (w_code == 0 )
 				ft_putstr_fd("\nSUCCESS after waitpid\n", 1);
 			else
-				ft_putstr_fd("\nFAILURE with wait_status_code\n", 1);
-				// printf("FAILURE with wait_status_code %d\n", w_code);
+				ft_putstr_fd("\nFAILURE with wait_status_code\n", 2);
+			printf("w_status=%d,  w_code %d\n", w_status, w_code);
+			
 		}
 	}
 	return (0);
@@ -308,10 +328,12 @@ int	main(int argc, char **argv, char **env)
 {
 	// just_cmd(env);
 	// redirect_out(env);
-	// redirect_in(); //+
+	// redirect_in();
 	// pipe_();
 	// pipe_test(env);
-	just_relative_cmd();
+	// just_relative_cmd();
+	
+	many_pipes();
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 22:35:10 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/06 09:53:59 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/09 13:24:07 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	main(int argc, char **argv, char **env)
 	t_msh		*msh_ctx;
 	char		*line;
 	char		*prompt;
-	t_ast_node	*ast_nodes;
 
 	if (argc != 1)
 		exit(INPUT_ERROR);
@@ -33,21 +32,21 @@ int	main(int argc, char **argv, char **env)
 	prompt = get_prompt();
 	while (1)
 	{
-		line = readline(prompt);
-		printf("[main] line: %s\n", line);
+		line = readline(prompt); // printf("[main] line: %s\n", line);
 		if (line && ft_strlen(line))
 			add_history(line);
 		if (!line)
 			break ;
-
+		msh_ctx->status = 0;
 		msh_ctx->not_valid_input = 0;
-		ast_nodes = parser(line, msh_ctx);
+		msh_ctx->node = parser(line, msh_ctx);
 		free(line);
-		if (ast_nodes == NULL || msh_ctx->not_valid_input == 1)
+		if (msh_ctx->node == NULL || msh_ctx->not_valid_input == 1)
 			continue;
-		//когда делать шаг подготовки: создание файлов и тд
-		printf("\n[main] "); print_nodes_list(ast_nodes);
-		free_nodes_lst(&ast_nodes);
+		// executor(msh_ctx);
+		//когда делать шаг подготовки: создание файлов и тд //создание файлов в ast_cmd_node_lst_push_bottom
+		printf("\n[main] "); print_nodes_list(msh_ctx->node);
+		free_nodes_lst(&msh_ctx->node); //TO BE DONE переделать под новую стр.
 	}
 	free_env_lst(&msh_ctx->env);
 	free(prompt);

@@ -6,17 +6,16 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:19:51 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/05 09:07:56 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/09 13:23:54 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast_node *parser(char *line, t_msh *msh_ctx)
+t_node *parser(char *line, t_msh *msh_ctx)
 {
-	t_ast_node *ast_nodes;
+	t_node *ast_nodes;
 	char	**tokens;
-	int		tokens_count;
 	
 	msh_ctx->exeption_indexes = NULL; //чтобы не было ошибки pointer being freed was not allocated
 	tokens = get_tokens(line, msh_ctx, &(msh_ctx->exeption_indexes), &(msh_ctx->exeption_indexes_n));
@@ -25,20 +24,21 @@ t_ast_node *parser(char *line, t_msh *msh_ctx)
 		printf("TOKENS == NULL\n");
 		return (NULL);
 	}
-	tokens_count = get_tokens_count(tokens); // printf("tokens_count: %d\n", tokens_count);
+	msh_ctx->tokens_count = get_tokens_count(tokens); // printf("tokens_count: %d\n", msh_ctx->tokens_count);
 	// printf("[parser] char *tokens[%d]: ", tokens_count); print_string_array(tokens, 0);
 	// print_int_array(msh_ctx->exeption_indexes, msh_ctx->exeption_indexes_n);
 	
-	check_valid_input(tokens, tokens_count, msh_ctx);
+	check_valid_input(tokens, msh_ctx->tokens_count, msh_ctx);
 	if (msh_ctx->not_valid_input == 1)
 	{
+		msh_ctx->status = 258;
 		if (msh_ctx->exeption_indexes)
 			free(msh_ctx->exeption_indexes);
 		free_string_array(tokens);
 		return (NULL);
 	}
 	// ast_nodes = NULL;
-	ast_nodes = tokens_to_ast_nodes(tokens, tokens_count, msh_ctx);
+	ast_nodes = tokens_to_ast_nodes(tokens, msh_ctx->tokens_count, msh_ctx);
 	if (ast_nodes == NULL)
 		printf("[parser NO_NODES_LIST]\n");
 

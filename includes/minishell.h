@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/07 09:56:12 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/09 12:49:03 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,12 @@
 
 typedef struct s_msh
 {
-	t_btree	*ast; //DELETE
+	// t_btree	*ast; //DELETE
+	t_node	*node;
 	t_env	*env;
+	char	**envs;
+	int		status;
+	int		tokens_count;
 	int		*exeption_indexes; //хранятся индексы токенов "|" '|' и редиректов в кавычках + внести индексы токенов $? "$?"
 	int		exeption_indexes_n;
 	int		not_valid_input; //TO DO объединить с not_closed_quote
@@ -50,52 +54,48 @@ typedef struct s_msh
 
 char		*get_prompt(void);
 
-// parser
-t_ast_node	*parser(char *line, t_msh *msh_ctx);
+//parser
+t_node	*parser(char *line, t_msh *msh_ctx);
 char		**get_tokens(char *line, t_msh *msh_ctx, int **special_indexes, int *special_indexes_n);
 int			is_exeption_token(char *line, int tmp_i, char c);
 
 //check_input.c
 void		check_valid_input(char **tokens, int t_count, t_msh *msh_ctx);
 
-// array_realloc
+//array_realloc
 char		**tokens_realloc(char **tokens, int tokens_count);
 int			**int_array_realloc(int **array, int *array_n);
 
-// lexer
+//lexer
 int			single_quote_lexer(char *line, int i, t_msh *msh_ctx);
 int			double_quotes_lexer(char *line, int i, t_msh *msh_ctx);
 int			regular_char_lexer(char *line, int i, t_msh *msh_ctx);
 int			special_chars_lexer(char *line, int i);
 
-// token_saver
+//token_saver
 void		single_quote_token_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
 void		double_quotes_token_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
 void		regular_char_token_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
 void		special_chars_token_saver(char **tokens, int token_n, char *line, int i);
 
-// tokens_to_ast_nodes
-t_ast_node 	*tokens_to_ast_nodes(char **tokens, int tokens_count, t_msh *msh_ctx);
-int			is_in_exception_indexes(int *exeption_indexes, int exeption_indexes_n, int token_i);
+//tokens_to_ast_nodes
+t_node 		*tokens_to_ast_nodes(char **tokens, int tokens_count, t_msh *msh_ctx);
+int			is_in_exception_indexes(t_msh *msh_ctx, int token_i);
 
-// ast.c
-void		print_nodes_list(t_ast_node *ast_nodes);
-int			is_special_token(char **tokens, int token_i, int *exeption_indexes, int exeption_indexes_n);
+//node
+void		print_nodes_list(t_node *ast_nodes);
+int			is_special_token(char **tokens, int t_i, t_msh *msh_ctx);
 int			is_special_symbols(char *token);
-void		ast_node_lst_push_bottom(t_ast_node **head, t_ast_type type);
-void		ast_cmd_node_lst_push_bottom(t_ast_node **head, char **tokens, int *i, t_ast_type type, t_msh *msh_ctx);
-t_ast_node	*get_last_ast_node(t_ast_node *head);
-char		**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx);
+void		ast_node_lst_push_bottom(t_node **head, t_ast_type type);
+void		ast_cmd_node_lst_push_bottom(t_node **head, char **tokens, int *i, t_ast_type type, t_msh *msh_ctx);
+t_node		*get_last_ast_node(t_node *head);
+char		**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx, t_node *new);
+char		**get_cmd_node_argv0(char **tokens, int *token_i, t_msh *msh_ctx);
+int			is_pipe_token(char **tokens, int t_i, t_msh *msh_ctx);
+int			is_redirect_token(char **tokens, int t_i, t_msh *msh_ctx);
 
-// free_utils.c
-void		free_nodes_lst(t_ast_node **ast_nodes);
-void		free_string_array(char **argv);
-
-// utils
-int 		get_tokens_count(char **tokens);
-void		print_string_array(char **argv, int count);
-void		print_int_array(int *array, int n);
-
+//redirect
+int			redir_token_handler(char **tokens, int *t_i, t_msh *msh_ctx, t_node *new);
 
 // get_env
 int		get_env_var_value_to_lexer(char *line, int i, t_msh *msh_ctx);
@@ -112,5 +112,14 @@ int		export_builtin(t_env *envs, char **argv, int fd);
 char	*get_env_name_to_buildin(char *argv, int *i, int *k);
 int		unset(t_env **envs, char **argv, int fd);
 int		is_not_valid(char *argv);
+
+//free_utils
+void		free_nodes_lst(t_node **ast_nodes);
+void		free_string_array(char **argv);
+
+//utils
+int 		get_tokens_count(char **tokens);
+void		print_string_array(char **argv, int count);
+void		print_int_array(int *array, int n);
 
 #endif

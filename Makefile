@@ -23,13 +23,15 @@ SRCS_FILES	= main.c							\
 			  get_env.c 						\
 			  tokens_to_ast_nodes.c 			\
 			  ast_exec.c						\
-			  ast.c								\
+			  node.c							\
+			  redirect.c						\
 			  prompt.c							\
 			  env.c 							\
 			  export.c 							\
 			  unset.c 							\
 			  utils.c							\
-			  free_utils.c 						\
+			  utils_special.c					\
+			  utils_free.c 						\
 			#   btree/btree_apply_prefix.c		\
 			  btree/btree_create_node.c			\
 

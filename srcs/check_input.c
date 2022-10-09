@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 08:40:26 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/05 18:11:03 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/09 11:03:23 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ int	is_real_special_token(t_msh *msh_ctx, char **tokens, \
 
 	is_real = 0;
 	if (ft_strcmp(tokens[t_n], special_s) == 0 && \
-		!is_in_exception_indexes(msh_ctx->exeption_indexes, \
-				msh_ctx->exeption_indexes_n, t_n))
+		!is_in_exception_indexes(msh_ctx, t_n))
 		is_real = 1;
 	return (is_real);
 }
@@ -65,8 +64,7 @@ int	no_regular_after_redirect(t_msh *msh_ctx, char **tokens, \
 			msh_ctx->not_valid_input = 1;
 			return (1);
 		}
-		if (is_special_token(tokens, t_i + 1, \
-					msh_ctx->exeption_indexes, msh_ctx->exeption_indexes_n))
+		if (is_special_token(tokens, t_i + 1, msh_ctx))
 		{
 			ft_putstr_fd("bash: syntax error near unexpected token \'>\'\n", 2);
 			msh_ctx->not_valid_input = 1;

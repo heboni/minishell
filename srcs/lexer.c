@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 14:26:06 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/04 22:30:40 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/11 00:06:48 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int	regular_char_lexer(char *line, int i, t_msh *msh_ctx)
 			i++;
 			continue; //04.08 fix $TERM$HOME - должен быть 1 аргумент
 		}
+		if (line[i] == '$' && line[i + 1] == '?')
+			i = handle_status_from_lexer(i + 1, msh_ctx);
 		// printf("%c", line[i]);
 		if (line[i] == ' ') //добавить другие пробелы
 			break ;
@@ -61,7 +63,58 @@ int	special_chars_lexer(char *line, int i) //из regular_char не надо в�
 	return (i);
 }
 
+int	handle_status_from_lexer(int i, t_msh *msh_ctx)
+{
+	//стоим на ? и не переходим на "/след символ, переход в цикле double_quotes_lexer
+	if (msh_ctx->s_status)
+		free(msh_ctx->s_status);
+	msh_ctx->s_status = ft_itoa(msh_ctx->status);
+	// printf("[handle_status_from_lexer] s_status = %s\n", msh_ctx->s_status);
+	msh_ctx->cur_env_vars_len += ft_strlen(msh_ctx->s_status);
+	return (i);
+}
+
 int	double_quotes_lexer(char *line, int i, t_msh *msh_ctx)
+{
+	// printf("in double\n");
+	while (line[++i] != '\"')
+	{
+		// printf("double[%d]: %c\n", i, line[i]);
+		// printf("%c", line[i]); //05.08
+		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\"' && line[i + 1] != '?') //11.08 fix "$","$ aaa"//2.10 fix "$?"
+			i = get_env_var_value_to_lexer(line, i + 1, msh_ctx); // i = get_env_var_value_to_lexer(line, i + 1, 0, envs); //05.08
+		// else//4.10
+		// 	printf("%c", line[i]); //05.08 //4.10
+		if (line[i] == '$' && line[i + 1] == '?')
+			i = handle_status_from_lexer(i + 1, msh_ctx);
+		if (line[i] == '\0')
+		{
+			printf("Not closed quote \"\n");
+			msh_ctx->not_valid_input = 1;
+			return (i);// break;
+		}
+	} //TO DO в кажом if ниже возвращается i, удалить из каждого и cделать else if
+	if (line[i + 1] == '\"')
+	{
+		i = double_quotes_lexer(line, i + 1, msh_ctx);
+		return (i); //01.08
+	}
+	if (line[i + 1] == '\'')
+	{
+		i = single_quote_lexer(line, i + 1, msh_ctx);
+		return (i); //01.08
+	}
+	if (line[i + 1] == '|')
+		return (i); //03.08
+	if (line[i + 1] != ' ' && line[i + 1] != '\0') //04.08 //добавить другие пробелы
+	{
+		i = regular_char_lexer(line, i + 1, msh_ctx);
+		return (i); //01.08
+	}
+	return (i);
+}
+
+int	double_quotes_lexer0(char *line, int i, t_msh *msh_ctx)
 {
 	// printf("in double\n");
 	while (line[++i] != '\"')
@@ -111,7 +164,7 @@ int	single_quote_lexer(char *line, int i, t_msh *msh_ctx)
 			msh_ctx->not_valid_input = 1;
 			return (i);// break;
 		}
-	} //TO DO в кажом if ниже возвращается i, удалить из каждого
+	} //TO DO в кажом if ниже возвращается i, удалить из каждого и cделать else if
 	// printf("\nSINGLE_I: %d", i);
 	if (line[i + 1] == '\'')
 	{

@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 12:45:21 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/10 00:12:41 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/11 13:48:59 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,17 @@ char	*get_redirect_r_file(char **tokens, int *t_i, t_node *new, t_msh *msh_ctx)
 	fd = open(f_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1) //статус выставлять в 1 не надо, тк если дальше пайп, правая команда будет выполняться
 	{
-		new->status = 1;
+		new->cmd_status = 1;
 		msh_ctx->status = 1;
 		ft_putstr_fd_nl("bash: ", f_name, 2, 0);
 		ft_putstr_fd_nl(": ", strerror(errno), 2, 1);
 		free(f_name);
 		return (NULL);
 	}
+	// if (msh_ctx->heredoc_write_f)
+	// 	free(msh_ctx->heredoc_write_f);
+	// msh_ctx->heredoc_write_f = ft_strdup(f_name);
+	msh_ctx->heredoc_fd = fd;
 	new->fd_out = fd;
 	return (f_name);
 }
@@ -47,13 +51,17 @@ char	*get_redirect_rr_file(char **tokens, int *t_i, t_node *new, t_msh *msh_ctx)
 	int fd = open(f_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1) //статус выставлять в 1 не надо, тк если дальше пайп, правая команда будет выполняться
 	{
-		new->status = 1;
+		new->cmd_status = 1;
 		msh_ctx->status = 1;
 		ft_putstr_fd_nl("bash: ", f_name, 2, 0);
 		ft_putstr_fd_nl(": ", strerror(errno), 2, 1);
 		free(f_name);
 		return (NULL);
 	}
+	// if (msh_ctx->heredoc_write_f)
+	// 	free(msh_ctx->heredoc_write_f);
+	// msh_ctx->heredoc_write_f = ft_strdup(f_name);
+	msh_ctx->heredoc_fd = fd;
 	new->fd_out = fd;
 	return (f_name);
 }
@@ -71,7 +79,7 @@ char	*get_redirect_l_file(char **tokens, int *t_i, t_node *new, t_msh *msh_ctx)
 	int fd = open(f_name, O_RDONLY);// int fd = open(f_name, O_RDONLY, 0644);
 	if (fd == -1) //?статус выставлять в 1 не надо, тк если дальше пайп, правая команда будет выполняться
 	{
-		new->status = 1;
+		new->cmd_status = 1;
 		msh_ctx->status = 1;
 		ft_putstr_fd_nl("bash: ", f_name, 2, 0);
 		ft_putstr_fd_nl(": ", strerror(errno), 2, 1);
@@ -85,12 +93,17 @@ char	*get_redirect_l_file(char **tokens, int *t_i, t_node *new, t_msh *msh_ctx)
 char	*get_redirect_ll_file(char **tokens, int *t_i, t_node *new, t_msh *msh_ctx) //TO BE DONE
 {
 	char	*f_name;
+	int 	fd;
 
 	(*t_i)++; //переходим на имя файла
 	f_name = ft_strdup(tokens[*t_i]);
-	new->fd_in = 0; new->fd_out = 1; //поменять в зависимости от типа
-	msh_ctx->status = 0;
-	//TO BE DONE
+	if (msh_ctx->heredoc_stop_f)
+		free(msh_ctx->heredoc_stop_f);
+	msh_ctx->heredoc_stop_f = ft_strdup(f_name);
+	
+	fd = open(".del", O_CREAT | O_RDWR | O_TRUNC, 0644); //добавить обработку неуспеха
+	msh_ctx->heredoc_fd = fd;
+	new->fd_in = fd;
 	return (f_name);
 }
 

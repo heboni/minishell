@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 00:09:32 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/09 16:11:08 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/10 15:32:19 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,10 @@ char	*get_cmd_path(char *cmd_name, t_msh *msh_ctx)
 	char	*path;
 	
 	cmd_path = NULL;
-	if (cmd_name == NULL && ft_strlen(cmd_name) == 0)
+	if ((cmd_name == NULL && ft_strlen(cmd_name) == 0) ||
+		ft_strcmp(cmd_name, "exit") == 0 || 
+		ft_strcmp(cmd_name, "export") == 0 ||
+		ft_strcmp(cmd_name, "unset") == 0)
 		return (cmd_path);
 	env_path = get_env_value_by_name_from_envs("PATH", msh_ctx);
 	if (!env_path || ft_strchr(cmd_name, '/'))

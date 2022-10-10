@@ -6,19 +6,25 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 07:39:35 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/04 19:22:23 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/11 00:07:17 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	handle_status_from_saver(char **tokens, int token_n, int i, t_msh *msh_ctx)
+{
+	//стоим на ? и не переходим на "/след символ, переход в цикле double_quotes_lexer
+	tokens[token_n] = ft_strcpy_end(tokens[token_n], msh_ctx->s_status);
+	// printf("[handle_status_from_saver] s_status = %s, tokens[token_n]: %s\n", msh_ctx->s_status, tokens[token_n]);
+	return (i);
+}
+
 void	double_quotes_token_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx)
 {
-	int	*i_ptr;
 	int	k;
 
 	k = ft_strlen(tokens[token_n]) - 1;
-	i_ptr = &i;
 	// printf("\n[double_quotes_token_saver] i=%d, k=%d\n", i, k);
 	while (line[++i] != '\"' && line[i] != '\0')
 	{
@@ -31,6 +37,12 @@ void	double_quotes_token_saver(char **tokens, int token_n, char *line, int i, t_
 			// printf("[double_quotes_token_saver] i=%d, line[i]=%c, line[i+1]=%c\n", i, line[i], line[i+1]);
 			// i = get_env_var_value(line, i + 1, envs);
 			// break; //10.09 echo "''' $USER   ''"
+		}
+		else if (line[i] == '$' && line[i + 1] == '?')
+		{
+			i = handle_status_from_saver(tokens, token_n, i + 1, msh_ctx);
+			k = ft_strlen(tokens[token_n]) - 1;
+			// printf("line[%d]: %c, tokens[token_n]: %s, k=%d", i, line[i], tokens[token_n], k);
 		}
 		else
 		{
@@ -127,8 +139,16 @@ void	regular_char_token_saver(char **tokens, int token_n, char *line, int i, t_m
 		{
 			i = get_env_var_value_to_saver(tokens, token_n, line, i + 1, msh_ctx);
 			// i = get_env_var_value(line, i + 1, 0, envs);
-			i++;
+			i++; //TO DO  внести в get_env_var_value_to_saver //нельзя, тк используется в double_saver
 			continue; //04.08 fix $TERM$HOME - должен быть 1 аргумент
+		}
+		if (line[i] == '$' && line[i + 1] == '?')
+		{
+			// printf("regular\n");
+			i = handle_status_from_saver(tokens, token_n, i + 1, msh_ctx);
+			i++;
+			// printf("line[%d]: %c, tokens[token_n]: %s\n", i, line[i], tokens[token_n]);
+			continue;
 		}
 		if (line[i] == ' ') //добавить другие пробелы
 			break ;

@@ -94,6 +94,8 @@ int	get_env_var_value_to_lexer(char *line, int i, t_msh *msh_ctx) //TO DO убр
 	if (var_name == NULL)
 		exit(STACK_OVERFLOW);
 	get_env_name_from_line(&var_name, line, tmp_i);
+	var_value = NULL;
+	(void)var_value;
 	var_value = get_env_value_by_name_from_envs(var_name, msh_ctx); //зачем нужен этот вызов?
 	//printf("%s", var_value);
 	free(var_name);

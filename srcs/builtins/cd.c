@@ -6,11 +6,14 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 13:20:05 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/09 16:41:37 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/10 20:32:42 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+//обновлять PWD и  OLDPWD
+//отрисовывать новый prompt или он сам новый отрисуется в зависимости от PWD
 
 int	cd(char **argv) //getcwd, chdir //with only a relative or absolute path 
 {

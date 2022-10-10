@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:19:51 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/09 13:23:54 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/10 23:25:48 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_node *parser(char *line, t_msh *msh_ctx)
 	tokens = get_tokens(line, msh_ctx, &(msh_ctx->exeption_indexes), &(msh_ctx->exeption_indexes_n));
 	if (tokens == NULL)
 	{
-		printf("TOKENS == NULL\n");
+		printf("TOKENS == NULL\n"); //TO DO delete
 		return (NULL);
 	}
 	msh_ctx->tokens_count = get_tokens_count(tokens); // printf("tokens_count: %d\n", msh_ctx->tokens_count);
@@ -37,7 +37,6 @@ t_node *parser(char *line, t_msh *msh_ctx)
 		free_string_array(tokens);
 		return (NULL);
 	}
-	// ast_nodes = NULL;
 	ast_nodes = tokens_to_ast_nodes(tokens, msh_ctx->tokens_count, msh_ctx);
 	if (ast_nodes == NULL)
 		printf("[parser NO_NODES_LIST]\n");
@@ -88,6 +87,7 @@ char	**get_tokens(char *line, t_msh *msh_ctx, int **exeption_indexes, int *exept
 			
 			tokens = tokens_realloc(tokens, tokens_count);
 			tokens[tokens_count - 1] = (char *)malloc(sizeof(char) * token_len); //выделить память под текущий токен
+			tokens[tokens_count - 1][0] = '\0';
 			if (tokens[tokens_count - 1] == NULL)
 				exit(STACK_OVERFLOW);
 			double_quotes_token_saver(tokens, tokens_count - 1, line, tmp_i, msh_ctx);//заполнить текущий токен

@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 18:51:56 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/09 16:05:44 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/10 23:56:53 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,18 @@ char	*ft_strcpy(char *dst, const char *src)
 	while (src[++i] != '\0')
 		dst[i] = src[i];
 	dst[i] = '\0';
+	return (dst);
+}
+
+char	*ft_strcpy_end(char *dst, const char *src)
+{
+	int	i;
+	int	l;
+
+	i = -1;
+	l = ft_strlen(dst) - 1;
+	while (src[++i] != '\0')
+		dst[++l] = src[i];
+	dst[++l] = '\0';
 	return (dst);
 }

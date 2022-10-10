@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:35:27 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/09 23:54:40 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/11 09:33:43 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_node
 	t_redirect_type	type;  //TO DO delete
 	int			fd_in; //изначально инициировать как STDIN и STDOUT //если в ноде есть редиректы, то заменять
 	int			fd_out;
-	int			status; //если != 0, не выполнять cmd
+	int			cmd_status; //если != 0, не выполнять cmd
 	char		*cmd_name;
 	char		*path;
 	char		**argv;
@@ -40,7 +40,6 @@ typedef struct s_node
 	char		*rr_f;
 	char		*l_f;
 	char		*ll_f;
-	int			*status_argv; //можно тут хранить индексы аргументов, которые являются $? "$?"
 	struct s_node	*next;
 }				t_node;
 

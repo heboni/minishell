@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/10 00:04:15 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/11 13:13:22 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,11 @@ typedef struct s_msh
 {
 	// t_btree	*ast; //DELETE
 	t_node	*node;
+	t_node	*node_tmp; //указывает на одну память с node
 	t_env	*env_lst;
 	char	**envs;
 	int		status;
+	char	*s_status;
 	int		tokens_count;
 	int		*exeption_indexes; //хранятся индексы токенов "|" '|' и редиректов в кавычках + внести индексы токенов $? "$?"
 	int		exeption_indexes_n;
@@ -53,13 +55,16 @@ typedef struct s_msh
 	int		p_wr;
 	int		is_stdin_pipe;
 	int		is_stdout_pipe;
+	char	*heredoc_stop_f;
+	// char	*heredoc_write_f;
+	int		heredoc_fd;
 }				t_msh;
 
 
 char		*get_prompt(void);
 
 //parser
-t_node	*parser(char *line, t_msh *msh_ctx);
+t_node		*parser(char *line, t_msh *msh_ctx);
 char		**get_tokens(char *line, t_msh *msh_ctx, int **special_indexes, int *special_indexes_n);
 int			is_exeption_token(char *line, int tmp_i, char c);
 
@@ -75,12 +80,14 @@ int			single_quote_lexer(char *line, int i, t_msh *msh_ctx);
 int			double_quotes_lexer(char *line, int i, t_msh *msh_ctx);
 int			regular_char_lexer(char *line, int i, t_msh *msh_ctx);
 int			special_chars_lexer(char *line, int i);
+int			handle_status_from_lexer(int i, t_msh *msh_ctx);
 
 //token_saver
 void		single_quote_token_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
 void		double_quotes_token_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
 void		regular_char_token_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
 void		special_chars_token_saver(char **tokens, int token_n, char *line, int i);
+int			handle_status_from_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
 
 //tokens_to_ast_nodes
 t_node 		*tokens_to_ast_nodes(char **tokens, int tokens_count, t_msh *msh_ctx);
@@ -112,8 +119,16 @@ char	*get_cmd_path(char *cmd_name, t_msh *msh_ctx);
 
 //executor
 void	executor(t_msh *msh_ctx);
+void	exec_builtins(t_msh *msh_ctx);
+int		is_builtin(char *cmd_name);
+
+//heredoc
+void	ms_write_heredoc_file(t_msh *msh_ctx);
 
 // buildins
+int		exit_builtin(t_msh *msh_ctx);
+int		pwd_builtin(t_msh *msh_ctx);
+int		echo_builtin(t_msh *msh_ctx);
 int		env_builtin(t_env *envs, char **argv, int fd);
 int		export_builtin(t_env *envs, char **argv, int fd);
 char	*get_env_name_to_buildin(char *argv, int *i, int *k);
@@ -128,5 +143,6 @@ void		free_string_array(char **argv);
 int 		get_tokens_count(char **tokens);
 void		print_string_array(char **argv, int count);
 void		print_int_array(int *array, int n);
+int			len_2d_array(char **string);
 
 #endif

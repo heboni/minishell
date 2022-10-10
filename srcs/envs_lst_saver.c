@@ -58,3 +58,31 @@ char	*get_env_value_to_save(char *env, int i, int k)
 	value[l] = '\0';
 	return (value);
 }
+
+char	**envs_lst_to_char_array(t_env *env_lst)
+{
+	char	**envs;
+	t_env	*tmp_lst;
+	int		envs_count;
+	int		i;
+
+	envs = NULL;
+	tmp_lst = env_lst;
+	envs_count = 0;
+	i = -1;
+	while (tmp_lst)
+	{
+		envs_count++;
+		tmp_lst = tmp_lst->next;
+	}
+	envs = (char **)malloc(sizeof(char *) * (envs_count + 1));
+	if (envs == NULL)
+		exit(STACK_OVERFLOW);
+	while (env_lst)
+	{
+		envs[++i] = ft_strjoin_3(env_lst->var_name, "=\0", env_lst->var_value);
+		env_lst = env_lst->next;
+	}
+	envs[envs_count] = NULL;
+	return (envs);
+}

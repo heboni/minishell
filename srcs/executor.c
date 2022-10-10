@@ -6,39 +6,11 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 16:18:30 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/10 09:47:15 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/11 13:49:25 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	**envs_lst_to_char_array(t_env *env_lst)
-{
-	char	**envs;
-	t_env	*tmp_lst;
-	int		envs_count;
-	int		i;
-
-	envs = NULL;
-	tmp_lst = env_lst;
-	envs_count = 0;
-	i = -1;
-	while (tmp_lst)
-	{
-		envs_count++;
-		tmp_lst = tmp_lst->next;
-	}
-	envs = (char **)malloc(sizeof(char *) * (envs_count + 1));
-	if (envs == NULL)
-		exit(STACK_OVERFLOW);
-	while (env_lst)
-	{
-		envs[++i] = ft_strjoin_3(env_lst->var_name, "=\0", env_lst->var_value);
-		env_lst = env_lst->next;
-	}
-	envs[envs_count] = NULL;
-	return (envs);
-}
 
 void	status_handler(pid_t pid, t_msh *msh_ctx)
 {
@@ -62,14 +34,15 @@ void	one_cmd_executor(t_msh *msh_ctx)
 {
 	pid_t	pid;
 
-	if (msh_ctx->node->status != 0)
+	if (msh_ctx->node->cmd_status != 0)
 		return ;
 	pid = fork();
 	if (pid < 0)
 		ft_putstr_fd("Fork error\n", 2);
 	else if (pid == 0)
 	{
-		if (msh_ctx->is_stdin_pipe)
+		ms_write_heredoc_file(msh_ctx);
+		if (msh_ctx->is_stdin_pipe) //сперва pipe, потом redir, так как выигрывают fd редиректа
 			dup2(msh_ctx->p_r, 0); //0 указывает на read end pipe
 		if (msh_ctx->is_stdout_pipe)
 			dup2(msh_ctx->p_wr, 1);
@@ -84,8 +57,12 @@ void	one_cmd_executor(t_msh *msh_ctx)
 			close(msh_ctx->node->fd_in);
 		}
 		if (is_builtin(msh_ctx->node->cmd_name))
+		{
 			exec_builtins(msh_ctx);
-		if (execve(msh_ctx->node->path, msh_ctx->node->argv, msh_ctx->envs) == -1)
+			exit(msh_ctx->status); //так смогу не exit'аться из одиночных команд (не вызывать exit в самом buitin)
+			// и с правильным кодом exit'аться из форкнутого процесса 
+		}
+		else if (execve(msh_ctx->node->path, msh_ctx->node->argv, msh_ctx->envs) == -1)
 		{
 			ft_putstr_fd("Execve error: ", 2);
 			ft_putstr_fd(strerror(errno), 2); 
@@ -100,22 +77,23 @@ void	one_cmd_executor(t_msh *msh_ctx)
 }
 
 
-int	exec_builtins(t_msh *msh_ctx)
+void	exec_builtins(t_msh *msh_ctx)
 {
-	if (ft_strcmp(msh_ctx->node->cmd_name, "cd") == 0)
-		ms_cmd_execute_cd(msh_ctx);
-	else if (ft_strcmp(msh_ctx->node->cmd_name, "exit") == 0)
-		ms_cmd_execute_exit(msh_ctx);
-	else if (ft_strcmp(msh_ctx->node->cmd_name, "echo") == 0)
-		ft_echo(msh_ctx);
-	else if (ft_strcmp(msh_ctx->node->cmd_name, "export") == 0)
-		ft_export(msh_ctx);
-	else if (ft_strcmp(msh_ctx->node->cmd_name, "unset") == 0)
-		ft_unset(msh_ctx);
-	else if (ft_strcmp(msh_ctx->node->cmd_name, "echo") == 0)
-		ft_echo(msh_ctx);
+	// printf("BUILTIN!!");
+	if (ft_strcmp(msh_ctx->node->cmd_name, "exit") == 0)
+		msh_ctx->status = exit_builtin(msh_ctx);
 	else if (ft_strcmp(msh_ctx->node->cmd_name, "pwd") == 0)
-		ft_pwd(msh_ctx);
+		msh_ctx->status = pwd_builtin(msh_ctx);
+	else if (ft_strcmp(msh_ctx->node->cmd_name, "echo") == 0)
+		echo_builtin(msh_ctx);
+	// else if (ft_strcmp(msh_ctx->node->cmd_name, "cd") == 0)
+	// 	ms_cmd_execute_exit(msh_ctx);
+	// else if (ft_strcmp(msh_ctx->node->cmd_name, "export") == 0)
+	// 	ft_export(msh_ctx);
+	// else if (ft_strcmp(msh_ctx->node->cmd_name, "unset") == 0)
+	// 	ft_unset(msh_ctx);
+	// else if (ft_strcmp(msh_ctx->node->cmd_name, "env") == 0)
+	// 	ft_echo(msh_ctx);
 }
 
 int	is_builtin(char *cmd_name)
@@ -123,7 +101,7 @@ int	is_builtin(char *cmd_name)
 	int	is_builtin;
 	
 	is_builtin = 0;
-	if (ft_strcmp(cmd_name, "cd") == 0)
+	if (ft_strcmp(cmd_name, "cd") == 0) //
 		is_builtin = 1;
 	else if (ft_strcmp(cmd_name, "exit") == 0)
 		is_builtin = 1;
@@ -186,15 +164,19 @@ void	pipes_executor(t_msh *msh_ctx)
 
 void	executor(t_msh *msh_ctx)
 {
+	msh_ctx->node_tmp = msh_ctx->node;
 	msh_ctx->envs = envs_lst_to_char_array(msh_ctx->env_lst); // print_string_array(msh_ctx->envs, 0);
 	if (!msh_ctx->node->next)
-		one_cmd_executor(msh_ctx);
+	{
+		if (is_builtin(msh_ctx->node->cmd_name))
+			exec_builtins(msh_ctx);
+		else
+			one_cmd_executor(msh_ctx);
+	}
 	else
 		pipes_executor(msh_ctx);
-	
-	// while (cmd)
-	// {
-	// 	int	pipefd[2];
+}
+
 
 	// 	if (pipe(pipefd) == -1)
 	// 	{
@@ -202,8 +184,3 @@ void	executor(t_msh *msh_ctx)
 	// 		msh_ctx->status = errno;
 	// 		return ;
 	// 	}
-	// 	pipe_left(pipefd, cmd);
-	// 	pipe_right(pipefd, cmd->next);
-	// 	cmd = cmd->next;
-	// }
-}

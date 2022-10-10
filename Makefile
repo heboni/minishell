@@ -10,11 +10,14 @@ SRCS_FILES	= main.c							\
 			  libft/ft_strcmp.c					\
 			  libft/ft_strncmp.c				\
 			  libft/ft_strdup.c					\
+			  libft/ft_strjoin.c				\
 			  libft/ft_strjoin_3.c				\
 			  libft/ft_putstr_fd.c				\
 			  libft/ft_isalpha.c				\
 			  libft/ft_isdigit.c 				\
 			  libft/ft_strchr.c 				\
+			  libft/ft_atoi.c 					\
+			  libft/ft_itoa.c 					\
 			  builtins/cd.c 					\
 			  builtins/echo.c 					\
 			  builtins/env.c 					\
@@ -36,6 +39,7 @@ SRCS_FILES	= main.c							\
 			  redirect.c						\
 			  prompt.c							\
 			  executor.c 						\
+			  heredoc.c 						\
 			  utils.c							\
 			  utils_special.c					\
 			  utils_free.c 						\

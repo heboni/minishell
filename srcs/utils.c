@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:17:05 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/04 19:31:36 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/10 15:41:04 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,16 @@ int get_tokens_count(char **tokens)
 		tokens++;
 	}
 	return (count);
+}
+
+int	len_2d_array(char **string)
+{
+	int	i;
+
+	i = 0;
+	if (string == NULL)
+		return (0);
+	while (string[i] != NULL)
+		i++;
+	return (i);
 }

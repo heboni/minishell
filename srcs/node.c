@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 20:54:51 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/10 00:06:33 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/11 09:35:22 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	node_lst_push_bottom(t_node **head, char **tokens, int *t_i, t_msh *msh_ctx
 		exit(STACK_OVERFLOW);
 	new->fd_in = STDIN_FILENO;
 	new->fd_out = STDOUT_FILENO;
-	new->status = 0;
+	new->cmd_status = 0;
 	new->r_f = NULL; new->rr_f = NULL; new->l_f = NULL; new->ll_f = NULL;
-	while (*t_i < msh_ctx->tokens_count && new->status == 0 && redir_token_handler(tokens, t_i, msh_ctx, new)) //отправили первый > //после выполнения этой ф уже на файле стоим
+	while (*t_i < msh_ctx->tokens_count && new->cmd_status == 0 && redir_token_handler(tokens, t_i, msh_ctx, new)) //отправили первый > //после выполнения этой ф уже на файле стоим
 	{//переходим с файла на следующий редир, либо на команду, тогда redir_token_handler вернет 0 в след. витке
 		(*t_i)++;
 	}
@@ -84,7 +84,7 @@ char	**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx, t_node *ne
 	int i = 0; int j = -1;
 	while (++j < t_count)
 	{
-		while (++tmp_i < msh_ctx->tokens_count && new->status == 0 && redir_token_handler(tokens, &tmp_i, msh_ctx, new)) {}
+		while (++tmp_i < msh_ctx->tokens_count && new->cmd_status == 0 && redir_token_handler(tokens, &tmp_i, msh_ctx, new)) {}
 		//отправили первый > //после выполнения этой ф уже на файле стоим
 		//переходим с файла на следующий редир, либо на команду, тогда redir_token_handler вернет 0 в след. витке
 		if (argv && i < argv_count)
@@ -103,49 +103,6 @@ t_node	*get_last_ast_node(t_node *head)
 	while (head->next)
 		head = head->next;
 	return (head);
-}
-
-int *fill_status_argv(char **tokens, int *t_i, t_msh *msh_ctx)
-{
-	int	*status_argv; //хранит индексы аргументов в cmd->argv (не токенов в tokens), которые являются $? (значением статуса)
-	int	status_count;
-	int	i;
-	int j;
-	int token_i;
-
-	i = -1;
-	status_count = 0;
-	status_argv = NULL;
-	while (++i < msh_ctx->exeption_indexes_n)
-	{
-		token_i = msh_ctx->exeption_indexes[i];
-		if (token_i > *t_i) //*t_i - индекс имени команды
-		{
-			if (ft_strcmp(tokens[token_i], "$?"))
-				status_count++;
-		}
-	}
-	if (status_count == 0)
-		return (NULL);
-	status_argv = (int *)malloc(sizeof(int) * (status_count + 1));
-	if (!status_argv)
-		exit (STACK_OVERFLOW);
-	i = -1;
-	j = 0;
-	while (++i < msh_ctx->exeption_indexes_n)
-	{
-		token_i = msh_ctx->exeption_indexes[i];
-		if (token_i > *t_i) //*t_i - индекс имени команды
-		{
-			if (ft_strcmp(tokens[token_i], "$?"))
-			{
-				status_argv[j] = token_i - *t_i - 1;
-				j++;
-			}	
-		}
-	}
-	status_argv[++j] = -100;
-	return (status_argv);
 }
 
 void	print_nodes_list(t_node *node)

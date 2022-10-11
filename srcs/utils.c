@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:17:05 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/10 15:41:04 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/12 11:24:12 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 void	print_string_array(char **argv, int count)
 {
-	int i = -1;
-	
+	int	i;
+
+	i = -1;
 	if (!argv)
 		return ;
 	printf("print_string_array\n");
@@ -26,8 +27,8 @@ void	print_string_array(char **argv, int count)
 			printf("%s\n", *argv);
 			argv++;
 		}
-			
-	} else 
+	}
+	else
 	{
 		while (++i < count)
 			printf("%s\n", argv[i]);
@@ -46,7 +47,7 @@ void	print_int_array(int *array, int n)
 	printf("\n[print_special_indexes_int_array] END\n");
 }
 
-int get_tokens_count(char **tokens)
+int	get_tokens_count(char **tokens)
 {
 	int	count;
 

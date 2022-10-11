@@ -6,78 +6,84 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 07:45:13 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/04 19:18:09 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/12 01:11:22 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	**int_array_realloc(int **array, int *array_n)
+int	*save_tmp_int_array(int **array, int *array_n)
+{
+	int	*tmp_array;
+	int	i;
+
+	i = -1;
+	tmp_array = (int *)malloc(sizeof(int) * *array_n);
+	if (tmp_array == NULL)
+		exit(STACK_OVERFLOW);
+	while (++i < *array_n)
+		tmp_array[i] = (*array)[i];
+	free(*array);
+	return (tmp_array);
+}
+
+int	*int_array_realloc(int **array, int *array_n)
 {
 	int	*tmp_array;
 	int	i;
 
 	i = -1;
 	tmp_array = NULL;
-	// printf("[int_array_realloc] array_n: %d\n", *array_n);
 	if (*array_n != 0)
-	{
-		tmp_array = (int *)malloc(sizeof(int) * *array_n);
-		if (tmp_array == NULL)
-			exit(STACK_OVERFLOW);
-		while (++i < *array_n)
-		{
-			tmp_array[i] = (*array)[i];
-			// printf("[int_array_realloc] tmp_array[%d]=%d\n", i, tmp_array[i]);
-		}
-		free(*array);
-	}
+		tmp_array = save_tmp_int_array(array, array_n);
 	*array_n += 1;
 	*array = (int *)malloc(sizeof(int) * *array_n);
 	if (*array == NULL)
 		exit(STACK_OVERFLOW);
-	
 	if (tmp_array != NULL)
 	{
-		i = -1;
 		while (++i < (*array_n - 1))
 			(*array)[i] = tmp_array[i];
 		free(tmp_array);
 	}
-	return (array);
+	return (*array);
 }
 
-char	**tokens_realloc(char **tokens, int tokens_count)
+char	**save_tmp_char_array(char **tokens, int toks_count)
 {
 	char	**tmp_tokens;
 	int		i;
-	
+
+	i = -1;
+	tmp_tokens = (char **)malloc(sizeof(char *) * toks_count);
+	if (tmp_tokens == NULL)
+		exit(STACK_OVERFLOW);
+	tmp_tokens[toks_count - 1] = NULL;
+	while (++i < toks_count - 1)
+	{
+		tmp_tokens[i] = ft_strdup(tokens[i]);
+		free(tokens[i]);
+	}
+	free(tokens);
+	return (tmp_tokens);
+}
+
+char	**tokens_realloc(char **tokens, int toks_count)
+{
+	char	**tmp_tokens;
+	int		i;
+
 	i = -1;
 	tmp_tokens = NULL;
-	// printf("[tokens_realloc] tokens_count: %d\n", tokens_count);
 	if (tokens != NULL)
-	{
-		tmp_tokens = (char **)malloc(sizeof(char *) * tokens_count);
-		if (tmp_tokens == NULL)
-			exit(STACK_OVERFLOW);
-		tmp_tokens[tokens_count - 1] = NULL; //почему tokens_count - 1
-		while (++i < tokens_count - 1)
-		{
-			tmp_tokens[i] = ft_strdup(tokens[i]);
-			free(tokens[i]); //освободить память каждого эл-та массива
-			// printf("[tokens_realloc] tmp_tokens[%d]: %s\n", i, tmp_tokens[i]);
-		}
-		free(tokens);
-	}
-	tokens = (char **)malloc(sizeof(char *) * tokens_count + 1);
+		tmp_tokens = save_tmp_char_array(tokens, toks_count);
+	tokens = (char **)malloc(sizeof(char *) * toks_count + 1);
 	if (tokens == NULL)
 		exit(STACK_OVERFLOW);
-	tokens[tokens_count] = NULL;
-	
+	tokens[toks_count] = NULL;
 	if (tmp_tokens != NULL)
 	{
-		i = -1;
-		while (++i < tokens_count - 1)
+		while (++i < toks_count - 1)
 		{
 			tokens[i] = ft_strdup(tmp_tokens[i]);
 			free(tmp_tokens[i]);

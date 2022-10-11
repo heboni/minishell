@@ -6,13 +6,14 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 00:09:32 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/10 15:32:19 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/12 01:44:32 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*allocate_cmd_path(const char *cmd, size_t s_cmd, char *path, size_t s_path)
+static char	*allocate_cmd_path(const char *cmd, size_t s_cmd,
+									char *path, size_t s_path)
 {
 	char	*new;
 	size_t	i;
@@ -70,11 +71,11 @@ char	*get_cmd_path(char *cmd_name, t_msh *msh_ctx)
 	char	*cmd_path;
 	char	*env_path;
 	char	*path;
-	
+
 	cmd_path = NULL;
-	if ((cmd_name == NULL && ft_strlen(cmd_name) == 0) ||
-		ft_strcmp(cmd_name, "exit") == 0 || 
-		ft_strcmp(cmd_name, "export") == 0 ||
+	if ((cmd_name == NULL && ft_strlen(cmd_name) == 0) || \
+		ft_strcmp(cmd_name, "exit") == 0 || \
+		ft_strcmp(cmd_name, "export") == 0 || \
 		ft_strcmp(cmd_name, "unset") == 0)
 		return (cmd_path);
 	env_path = get_env_value_by_name_from_envs("PATH", msh_ctx);
@@ -87,7 +88,7 @@ char	*get_cmd_path(char *cmd_name, t_msh *msh_ctx)
 		ft_putstr_fd("bash: ", 2);
 		ft_putstr_fd(cmd_name, 2);
 		ft_putstr_fd(": command not found\n", 2);
-		return (cmd_path);//exit(127);
+		return (cmd_path);
 	}
 	return (cmd_path);
 }

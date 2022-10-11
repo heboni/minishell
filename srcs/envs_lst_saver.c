@@ -6,37 +6,43 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 14:28:42 by heboni            #+#    #+#             */
-/*   Updated: 2022/09/18 22:58:33 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/12 01:37:54 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	envs_saver_free(char *name, char *value)
+{
+	free(name);
+	free(value);
+}
+
 void	envs_saver(char **env, t_env **envs_lst)
 {
-	char 	*name;
+	char	*name;
 	char	*value;
 	int		i;
-	int 	k;
-	
+	int		k;
+
 	while (*env)
 	{
 		i = -1;
-		while ((*env)[++i] != '=') {}
-		name = (char *)malloc(sizeof(char) * i + 1); 
-		if (name == NULL)
-			exit(STACK_OVERFLOW);
+		while ((*env)[++i] != '=')
+		{
+		}
+		name = (char *)malloc(sizeof(char) * i + 1);
 		k = -1;
 		while (++k < i)
 			name[k] = (*env)[k];
 		name[k] = '\0';
-		k++; //после '='
-		i++; //после '='
-		while ((*env)[i++] != '\0') {}
-		value = get_env_value_to_save(*env, i, k);
+		i++;
+		while ((*env)[i++] != '\0')
+		{
+		}
+		value = get_env_value_to_save(*env, i, k + 1);
 		env_lst_push_bottom(envs_lst, name, value);
-		free(name);
-		free(value);
+		envs_saver_free(name, value);
 		env++;
 	}
 }

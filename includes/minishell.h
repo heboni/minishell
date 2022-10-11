@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/11 13:13:22 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/12 00:47:34 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,20 @@
 # define SH_FG_RESET "\033[39m"
 # define SH_FG_CYAN "\033[36m"
 
-// struct s_msh	*msh_ctx;
-
 typedef struct s_msh
 {
 	// t_btree	*ast; //DELETE
+	char	*line;
 	t_node	*node;
 	t_node	*node_tmp; //указывает на одну память с node
 	t_env	*env_lst;
 	char	**envs;
 	int		status;
 	char	*s_status;
-	int		tokens_count;
-	int		*exeption_indexes; //хранятся индексы токенов "|" '|' и редиректов в кавычках + внести индексы токенов $? "$?"
-	int		exeption_indexes_n;
+	char	**tokens;
+	int		toks_count;
+	int		*exeption_indxs; //хранятся индексы токенов "|" '|' и редиректов в кавычках + внести индексы токенов $? "$?"
+	int		exeption_indxs_n;
 	int		not_valid_input;
 	int		cur_env_vars_len; //если $USER$TERM, то токен 1, token_len = len_env1_val + len_env2_val
 	int		p_r;
@@ -56,61 +56,69 @@ typedef struct s_msh
 	int		is_stdin_pipe;
 	int		is_stdout_pipe;
 	char	*heredoc_stop_f;
-	// char	*heredoc_write_f;
 	int		heredoc_fd;
 }				t_msh;
 
 
-char		*get_prompt(void);
+char	*get_prompt(void);
 
 //parser
-t_node		*parser(char *line, t_msh *msh_ctx);
-char		**get_tokens(char *line, t_msh *msh_ctx, int **special_indexes, int *special_indexes_n);
-int			is_exeption_token(char *line, int tmp_i, char c);
+t_node	*parser(t_msh *msh_ctx);
+void	free_from_parser(t_msh *msh_ctx);
+char	**get_tokens(char *line, t_msh *msh_ctx);
 
-//check_input.c
-void		check_valid_input(char **tokens, int t_count, t_msh *msh_ctx);
+//parser_handlers
+int		double_quotes_token_handler(int i, t_msh *msh_ctx, int *toks_count);
+int		single_quote_token_handler(int i, t_msh *msh_ctx, int *toks_count);
+int		special_chars_token_handler(int i, t_msh *msh_ctx, int *toks_count);
+int		regular_chars_token_handler(int i, t_msh *msh_ctx, int *toks_count);
+int		is_exeption_token(char *line, int tmp_i, char c);
+
+//check_input
+void	check_valid_input(char **tokens, int t_count, t_msh *msh_ctx);
 
 //array_realloc
-char		**tokens_realloc(char **tokens, int tokens_count);
-int			**int_array_realloc(int **array, int *array_n);
+char	**tokens_realloc(char **tokens, int toks_count);
+int		*int_array_realloc(int **array, int *array_n);
+int		*int_array_realloc1(int *array, int array_n);
+int		**int_array_realloc0(int **array, int *array_n);
 
 //lexer
-int			single_quote_lexer(char *line, int i, t_msh *msh_ctx);
-int			double_quotes_lexer(char *line, int i, t_msh *msh_ctx);
-int			regular_char_lexer(char *line, int i, t_msh *msh_ctx);
-int			special_chars_lexer(char *line, int i);
-int			handle_status_from_lexer(int i, t_msh *msh_ctx);
+int		single_quote_lexer(char *line, int i, t_msh *msh_ctx);
+int		double_quotes_lexer(char *line, int i, t_msh *msh_ctx);
+int		regular_char_lexer(char *line, int i, t_msh *msh_ctx);
+int		special_chars_lexer(char *line, int i);
+int		handle_status_from_lexer(int i, t_msh *msh_ctx);
 
 //token_saver
-void		single_quote_token_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
-void		double_quotes_token_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
-void		regular_char_token_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
-void		special_chars_token_saver(char **tokens, int token_n, char *line, int i);
-int			handle_status_from_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
+void	single_quote_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
+void	double_quotes_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
+void	regular_char_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
+void	special_chars_token_saver(char **tokens, int token_n, char *line, int i);
+int		handle_status_from_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
 
 //tokens_to_ast_nodes
-t_node 		*tokens_to_ast_nodes(char **tokens, int tokens_count, t_msh *msh_ctx);
-int			is_in_exception_indexes(t_msh *msh_ctx, int token_i);
+t_node 	*tokens_to_ast_nodes(char **tokens, int toks_count, t_msh *msh_ctx);
+int		is_in_exception_indexes(t_msh *msh_ctx, int token_i);
 
 //node
-void		print_nodes_list(t_node *ast_nodes);
-int			is_special_token(char **tokens, int t_i, t_msh *msh_ctx);
-int			is_special_symbols(char *token);
-void		ast_node_lst_push_bottom(t_node **head, t_redirect_type type);
-void		node_lst_push_bottom(t_node **head, char **tokens, int *t_i, t_msh *msh_ctx);
-t_node		*get_last_ast_node(t_node *head);
-char		**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx, t_node *new);
-char		**get_cmd_node_argv0(char **tokens, int *token_i, t_msh *msh_ctx);
-int			is_pipe_token(char **tokens, int t_i, t_msh *msh_ctx);
-int			is_redirect_token(char **tokens, int t_i, t_msh *msh_ctx);
+void	print_nodes_list(t_node *ast_nodes);
+int		is_special_token(char **tokens, int t_i, t_msh *msh_ctx);
+int		is_special_symbols(char *token);
+void	ast_node_lst_push_bottom(t_node **head, t_redirect_type type);
+void	node_lst_push_bottom(t_node **head, char **tokens, int *t_i, t_msh *msh_ctx);
+t_node	*get_last_ast_node(t_node *head);
+char	**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx, t_node *new);
+char	**get_cmd_node_argv0(char **tokens, int *token_i, t_msh *msh_ctx);
+int		is_pipe_token(char **tokens, int t_i, t_msh *msh_ctx);
+int		is_redirect_token(char **tokens, int t_i, t_msh *msh_ctx);
 
 //redirect
-int			redir_token_handler(char **tokens, int *t_i, t_msh *msh_ctx, t_node *new);
+int		redir_token_handler(char **tokens, int *t_i, t_msh *msh_ctx, t_node *new);
 
 // get_env
 int		get_env_var_value_to_lexer(char *line, int i, t_msh *msh_ctx);
-int		get_env_var_value_to_saver(char **tokens, int token_n, char *line, int i, t_msh *msh_ctx);
+int		get_env_var_value_to_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
 char	*get_env_value_by_name_from_envs(void *name, t_msh *msh_ctx);
 // char	*get_env_value_by_name_from_envs(void *name, t_env **envs, t_msh *msh_ctx);
 
@@ -136,13 +144,13 @@ int		unset(t_env **envs, char **argv, int fd);
 int		is_not_valid(char *argv);
 
 //free_utils
-void		free_nodes_lst(t_node **ast_nodes);
-void		free_string_array(char **argv);
+void	free_nodes_lst(t_node **ast_nodes);
+void	free_string_array(char **argv);
 
 //utils
-int 		get_tokens_count(char **tokens);
-void		print_string_array(char **argv, int count);
-void		print_int_array(int *array, int n);
-int			len_2d_array(char **string);
+int 	get_tokens_count(char **tokens);
+void	print_string_array(char **argv, int count);
+void	print_int_array(int *array, int n);
+int		len_2d_array(char **string);
 
 #endif

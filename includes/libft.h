@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 15:16:57 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/10 23:57:28 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/12 00:21:17 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ int		ft_atoi(const char *str, int *is_num);
 char	*ft_itoa(int n);
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
+int		is_space(char c);
 
 #endif

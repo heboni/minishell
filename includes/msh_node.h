@@ -6,14 +6,12 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:35:27 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/11 09:33:43 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/12 09:22:34 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MSH_AST_H
 # define MSH_AST_H
-
-# include "btree.h"
 
 typedef enum s_redirect_type
 {
@@ -43,12 +41,5 @@ typedef struct s_node
 	struct s_node	*next;
 }				t_node;
 
-
-//TO DO delete
-void		ast_exec(t_btree *root);
-void		ast_exec_node(t_btree *node);
-void		dup_check(int fd, int oldfd);
-void		close_check(int fd);
-t_node		*ast_create_node(t_redirect_type type, void *data);
 
 #endif

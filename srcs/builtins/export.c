@@ -6,12 +6,13 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 23:17:49 by heboni            #+#    #+#             */
-/*   Updated: 2022/09/29 21:30:24 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/12 01:32:49 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
 void	export_print_env_list(t_env *envs, int fd)
 {
 	printf("\n---------------export_print_env_list--------------\n");
@@ -147,3 +148,4 @@ int	export_builtin(t_env *envs, char **argv, int fd)
 	}
 	return (0);
 }
+*/

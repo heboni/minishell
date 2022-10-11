@@ -26,12 +26,14 @@ SRCS_FILES	= main.c							\
 			  builtins/pwd.c 					\
 			  builtins/unset.c 					\
 			  parser.c							\
+			  parser_handlers.c					\
 			  lexer.c							\
 			  token_saver.c						\
 			  check_input.c 					\
 			  array_realloc.c 					\
 			  envs_lst_saver.c					\
 			  envs_lst_utils.c					\
+			  envs_lst_utils2.c					\
 			  get_env.c 						\
 			  tokens_to_cmd_nodes.c 			\
 			  node.c							\
@@ -43,8 +45,6 @@ SRCS_FILES	= main.c							\
 			  utils.c							\
 			  utils_special.c					\
 			  utils_free.c 						\
-			#   btree/btree_apply_prefix.c		\
-			  btree/btree_create_node.c			\
 
 OBJS_FILES	= $(SRCS_FILES:.c=.o)
 
@@ -53,6 +53,7 @@ OBJS		= $(addprefix $(BUILD_DIR), $(OBJS_FILES))
 DEPS		= $(OBJS:.o=.d)
 
 CC			= gcc
+# CFLAGS		=  -MMD
 CFLAGS		= -Wall -Werror -Wextra -MMD
 LIBS		= -lreadline
 

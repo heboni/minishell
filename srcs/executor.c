@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 16:18:30 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/11 13:49:25 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/11 19:33:52 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	one_cmd_executor(t_msh *msh_ctx)
 		ft_putstr_fd("Fork error\n", 2);
 	else if (pid == 0)
 	{
+		printf("one_cmd_executor CHILD!!\n");
 		ms_write_heredoc_file(msh_ctx);
 		if (msh_ctx->is_stdin_pipe) //сперва pipe, потом redir, так как выигрывают fd редиректа
 			dup2(msh_ctx->p_r, 0); //0 указывает на read end pipe
@@ -59,7 +60,8 @@ void	one_cmd_executor(t_msh *msh_ctx)
 		if (is_builtin(msh_ctx->node->cmd_name))
 		{
 			exec_builtins(msh_ctx);
-			exit(msh_ctx->status); //так смогу не exit'аться из одиночных команд (не вызывать exit в самом buitin)
+			//теперь exit'аться в самих билдинах
+			// exit(msh_ctx->status); //так смогу не exit'аться из одиночных команд (не вызывать exit в самом buitin)
 			// и с правильным кодом exit'аться из форкнутого процесса 
 		}
 		else if (execve(msh_ctx->node->path, msh_ctx->node->argv, msh_ctx->envs) == -1)
@@ -168,10 +170,11 @@ void	executor(t_msh *msh_ctx)
 	msh_ctx->envs = envs_lst_to_char_array(msh_ctx->env_lst); // print_string_array(msh_ctx->envs, 0);
 	if (!msh_ctx->node->next)
 	{
-		if (is_builtin(msh_ctx->node->cmd_name))
-			exec_builtins(msh_ctx);
-		else
-			one_cmd_executor(msh_ctx);
+		// if (!ft_strcmp(msh_ctx->node->cmd_name, "exit")) // 
+		// if (is_builtin(msh_ctx->node->cmd_name))
+		// 	exec_builtins(msh_ctx);
+		// else
+		one_cmd_executor(msh_ctx); //переделать билдины под екзиты
 	}
 	else
 		pipes_executor(msh_ctx);

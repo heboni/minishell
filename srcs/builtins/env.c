@@ -6,12 +6,13 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 22:15:23 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/04 19:25:01 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/12 01:41:32 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
 void	env_builtin_print(t_env *envs, int fd)
 {
 	while (envs)
@@ -86,3 +87,4 @@ int	env_builtin(t_env *envs, char **argv, int fd)
 	env_builtin_print(envs, fd);
 	return (0);
 }
+*/

@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/12 00:47:34 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/13 07:41:13 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,7 @@ int		is_special_symbols(char *token);
 void	ast_node_lst_push_bottom(t_node **head, t_redirect_type type);
 void	node_lst_push_bottom(t_node **head, char **tokens, int *t_i, t_msh *msh_ctx);
 t_node	*get_last_ast_node(t_node *head);
-char	**get_cmd_node_argv(char **tokens, int *token_i, t_msh *msh_ctx, t_node *new);
-char	**get_cmd_node_argv0(char **tokens, int *token_i, t_msh *msh_ctx);
+char	**get_node_argv(char **tokens, int *token_i, t_msh *msh_ctx, t_node *new);
 int		is_pipe_token(char **tokens, int t_i, t_msh *msh_ctx);
 int		is_redirect_token(char **tokens, int t_i, t_msh *msh_ctx);
 

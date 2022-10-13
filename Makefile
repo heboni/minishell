@@ -28,6 +28,7 @@ SRCS_FILES	= main.c							\
 			  parser.c							\
 			  parser_handlers.c					\
 			  lexer.c							\
+			  lexer2.c							\
 			  token_saver.c						\
 			  check_input.c 					\
 			  array_realloc.c 					\

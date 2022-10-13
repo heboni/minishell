@@ -6,11 +6,26 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:17:05 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/12 11:24:12 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 00:34:10 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*alloc(int token_len)
+{
+	char	*s;
+	int		i;
+
+	i = -1;
+	s = NULL;
+	s = (char *)malloc(sizeof(char) * token_len);
+	if (s == NULL)
+		exit(STACK_OVERFLOW);
+	while (++i < token_len)
+		s[i] = '\0';
+	return (s);
+}
 
 void	print_string_array(char **argv, int count)
 {

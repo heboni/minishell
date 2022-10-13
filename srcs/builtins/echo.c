@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 09:49:28 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/11 23:49:59 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 01:40:39 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ int	echo_builtin(t_msh *msh_ctx)
 	argv = msh_ctx->node->argv + 1;
 	if (*argv == NULL)
 	{
-		write(1, "\n", 1);
-		exit(0);
+		printf("\n");
+		return (0); //exit?
 	}
 	else if (ft_strcmp("-n", *argv) == 0)
 	{
@@ -60,7 +60,7 @@ int	echo_builtin(t_msh *msh_ctx)
 		argv++;
 	}
 	echo_print(argv, n_flag);
-	exit(0);
+	return (0); //exit?
 }
 
 // int	echo_builtin0(t_msh *msh_ctx) //(char **argv, int fd)

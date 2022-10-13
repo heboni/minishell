@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/13 07:41:13 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 01:23:14 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 
 typedef struct s_msh
 {
-	// t_btree	*ast; //DELETE
+	char	*prompt;
 	char	*line;
 	t_node	*node;
 	t_node	*node_tmp; //указывает на одну память с node
@@ -116,10 +116,10 @@ int		is_redirect_token(char **tokens, int t_i, t_msh *msh_ctx);
 int		redir_token_handler(char **tokens, int *t_i, t_msh *msh_ctx, t_node *new);
 
 // get_env
-int		get_env_var_value_to_lexer(char *line, int i, t_msh *msh_ctx);
+int		pass_env_var_value_from_lexer(char *line, int i, t_msh *msh_ctx);
 int		get_env_var_value_to_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
 char	*get_env_value_by_name_from_envs(void *name, t_msh *msh_ctx);
-// char	*get_env_value_by_name_from_envs(void *name, t_env **envs, t_msh *msh_ctx);
+void	env_val_len_by_name_from_lst(char *name, t_msh *msh_ctx);
 
 // get_cmd_path
 char	*get_cmd_path(char *cmd_name, t_msh *msh_ctx);
@@ -147,6 +147,7 @@ void	free_nodes_lst(t_node **ast_nodes);
 void	free_string_array(char **argv);
 
 //utils
+char	*alloc(int token_len);
 int 	get_tokens_count(char **tokens);
 void	print_string_array(char **argv, int count);
 void	print_int_array(int *array, int n);

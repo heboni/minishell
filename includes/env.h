@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 14:35:30 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/12 01:36:19 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 01:14:24 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*get_env_value_to_save(char *env, int i, int k);
 char	**envs_lst_to_char_array(t_env *env_lst);
 
 // get_env
-void	get_env_name_from_line(char **var_name, char *line, int tmp_i);
+char	*get_env_name_from_line(char *line, int tmp_i, int var_len);
 void	put_env_value_to_token(char *var_value, char **tokens, int token_n);
 
 // envs_lst_utils

@@ -35,6 +35,7 @@ SRCS_FILES	= main.c							\
 			  envs_lst_utils.c					\
 			  envs_lst_utils2.c					\
 			  get_env.c 						\
+			  get_env2.c 						\
 			  tokens_to_cmd_nodes.c 			\
 			  node.c							\
 			  get_cmd_path.c 					\

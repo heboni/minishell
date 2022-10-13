@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 16:18:30 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/11 19:33:52 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/13 23:52:48 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,10 +171,10 @@ void	executor(t_msh *msh_ctx)
 	if (!msh_ctx->node->next)
 	{
 		// if (!ft_strcmp(msh_ctx->node->cmd_name, "exit")) // 
-		// if (is_builtin(msh_ctx->node->cmd_name))
-		// 	exec_builtins(msh_ctx);
-		// else
-		one_cmd_executor(msh_ctx); //переделать билдины под екзиты
+		if (is_builtin(msh_ctx->node->cmd_name))
+			exec_builtins(msh_ctx);
+		else
+			one_cmd_executor(msh_ctx); //переделать билдины под екзиты
 	}
 	else
 		pipes_executor(msh_ctx);

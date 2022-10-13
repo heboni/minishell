@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 14:26:06 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/11 00:06:48 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 01:23:14 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	regular_char_lexer(char *line, int i, t_msh *msh_ctx)
 		}
 		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\0' && line[i + 1] != '?')//04.08 fix $TERM $ HOME //11.08 fix $//2.10 fix $?
 		{
-			i = get_env_var_value_to_lexer(line, i + 1, msh_ctx); // i = get_env_var_value_to_lexer(line, i + 1, 0, envs);
+			i = pass_env_var_value_from_lexer(line, i + 1, msh_ctx);
 			i++;
 			continue; //04.08 fix $TERM$HOME - должен быть 1 аргумент
 		}
@@ -82,7 +82,7 @@ int	double_quotes_lexer(char *line, int i, t_msh *msh_ctx)
 		// printf("double[%d]: %c\n", i, line[i]);
 		// printf("%c", line[i]); //05.08
 		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\"' && line[i + 1] != '?') //11.08 fix "$","$ aaa"//2.10 fix "$?"
-			i = get_env_var_value_to_lexer(line, i + 1, msh_ctx); // i = get_env_var_value_to_lexer(line, i + 1, 0, envs); //05.08
+			i = pass_env_var_value_from_lexer(line, i + 1, msh_ctx); // i = pass_env_var_value_from_lexer(line, i + 1, 0, envs); //05.08
 		// else//4.10
 		// 	printf("%c", line[i]); //05.08 //4.10
 		if (line[i] == '$' && line[i + 1] == '?')
@@ -122,7 +122,7 @@ int	double_quotes_lexer0(char *line, int i, t_msh *msh_ctx)
 		// printf("double[%d]: %c\n", i, line[i]);
 		// printf("%c", line[i]); //05.08
 		if (line[i] == '$' && line[i + 1] != ' ' && line[i + 1] != '\"' && line[i + 1] != '?') //11.08 fix "$","$ aaa"//2.10 fix "$?"
-			i = get_env_var_value_to_lexer(line, i + 1, msh_ctx); // i = get_env_var_value_to_lexer(line, i + 1, 0, envs); //05.08
+			i = pass_env_var_value_from_lexer(line, i + 1, msh_ctx); // i = pass_env_var_value_from_lexer(line, i + 1, 0, envs); //05.08
 		// else//4.10
 		// 	printf("%c", line[i]); //05.08 //4.10
 		if (line[i] == '\0')

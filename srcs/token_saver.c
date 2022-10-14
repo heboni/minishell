@@ -6,177 +6,88 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 07:39:35 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/11 21:12:22 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 10:20:53 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	handle_status_from_saver(char **tokens, int token_n, int i, t_msh *msh_ctx)
+int	handle_status_from_saver(char **tokens, int t_n, int i, t_msh *msh_ctx)
 {
-	//стоим на ? и не переходим на "/след символ, переход в цикле double_quotes_lexer
-	tokens[token_n] = ft_strcpy_end(tokens[token_n], msh_ctx->s_status);
-	// printf("[handle_status_from_saver] s_status = %s, tokens[token_n]: %s\n", msh_ctx->s_status, tokens[token_n]);
+	tokens[t_n] = ft_strcpy_end(tokens[t_n], msh_ctx->s_status);
 	return (i);
 }
 
-void	double_quotes_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx)
+int	double_quotes_saver_core(char **tokens, int t_n, int i, t_msh *msh_ctx)
 {
 	int	k;
 
-	k = ft_strlen(tokens[token_n]) - 1;
-	// printf("\n[double_quotes_token_saver] i=%d, k=%d\n", i, k);
+	k = ft_strlen(tokens[t_n]) - 1;
 	while ((msh_ctx->line)[++i] != '\"' && (msh_ctx->line)[i] != '\0')
 	{
-		if ((msh_ctx->line)[i] == '$' && (msh_ctx->line)[i + 1] != ' ' && (msh_ctx->line)[i + 1] != '\"' && (msh_ctx->line)[i + 1] != '?')
+		if ((msh_ctx->line)[i] == '$' && (msh_ctx->line)[i + 1] != ' ' && \
+			(msh_ctx->line)[i + 1] != '\"' && (msh_ctx->line)[i + 1] != '?')
 		{
-			i = get_env_var_value_to_saver(tokens, token_n, i + 1, msh_ctx);
-			// printf("\n[double_quotes_token_saver] tokens[token_n]=%s\n", tokens[token_n]);
-			k = ft_strlen(tokens[token_n]) - 1; ////10.09 echo "''' $USER   ''"
-			// i++; //19.09 "$USER" переходим на ", в while переходим на '\0' //для каких кейсов этот переход нужен
-			// printf("[double_quotes_token_saver] i=%d, line[i]=%c, line[i+1]=%c\n", i, line[i], line[i+1]);
-			// i = get_env_var_value(line, i + 1, envs);
-			// break; //10.09 echo "''' $USER   ''"
+			i = get_env_var_value_to_saver(tokens, t_n, i + 1, msh_ctx);
+			k = ft_strlen(tokens[t_n]) - 1;
 		}
 		else if ((msh_ctx->line)[i] == '$' && (msh_ctx->line)[i + 1] == '?')
 		{
-			i = handle_status_from_saver(tokens, token_n, i + 1, msh_ctx);
-			k = ft_strlen(tokens[token_n]) - 1;
-			// printf("line[%d]: %c, tokens[token_n]: %s, k=%d", i, line[i], tokens[token_n], k);
+			i = handle_status_from_saver(tokens, t_n, i + 1, msh_ctx);
+			k = ft_strlen(tokens[t_n]) - 1;
 		}
 		else
-		{
-			tokens[token_n][++k] = (msh_ctx->line)[i];
-			// printf("%c", tokens[token_n][k]);
-		}
+			tokens[t_n][++k] = (msh_ctx->line)[i];
 	}
-	// k = ft_strlen(tokens[token_n]) - 1; //10.09 echo "''' $USER   ''"
-	tokens[token_n][++k] = '\0';
-	// printf("[double_quotes_token_saver] tokens[token_n]=%s\n", tokens[token_n]);
-	// printf("[double_quotes_token_saver] i=%d, line[i]=%c, line[i+1]=%c\n", i, line[i], line[i+1]);
+	tokens[t_n][++k] = '\0';
+	return (i);
+}
+
+void	double_quotes_token_saver(char **tokens, int t_n, int i, t_msh *msh_ctx)
+{
+	i = double_quotes_saver_core(tokens, t_n, i, msh_ctx);
 	if ((msh_ctx->line)[i] == '\0')
-	{
-		// printf("\n[double_quotes_token_saver] END OF LINE\n");
 		return ;
-	}
-	if ((msh_ctx->line)[i + 1] == '\'')
-	{
-		single_quote_token_saver(tokens, token_n, i + 1, msh_ctx);
+	else if ((msh_ctx->line)[i + 1] == '\'')
+		single_quote_token_saver(tokens, t_n, i + 1, msh_ctx);
+	else if ((msh_ctx->line)[i + 1] == '\"')
+		double_quotes_token_saver(tokens, t_n, i + 1, msh_ctx);
+	else if ((msh_ctx->line)[i + 1] == '|')
 		return ;
-	}
-	if ((msh_ctx->line)[i + 1] == '\"')
-	{
-		double_quotes_token_saver(tokens, token_n, i + 1, msh_ctx);
-		return ;
-	}
-	if ((msh_ctx->line)[i + 1] == '|')
-	{
-		// printf("\n[double_quotes_token_saver] PIPE\n");
-		return ;
-	}
-	if ((msh_ctx->line)[i + 1] != ' ' && (msh_ctx->line)[i + 1] != '\0') //добавить другие пробелы
-	{
-		regular_char_token_saver(tokens, token_n, i + 1, msh_ctx);
-		return ;
-	}
-	// printf("\n[double_quotes_token_saver] END\n");
+	else if ((msh_ctx->line)[i + 1] != ' ' && (msh_ctx->line)[i + 1] != '\0')
+		regular_char_token_saver(tokens, t_n, i + 1, msh_ctx);
 }
 
-void	single_quote_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx)
+void	single_quote_token_saver(char **tokens, int t_n, int i, t_msh *msh_ctx)
 {
 	int	k;
 
-	k = ft_strlen(tokens[token_n]) - 1;
-	// printf("\n[single_quote_token_saver] k=%d\n", k);
+	k = ft_strlen(tokens[t_n]) - 1;
 	while ((msh_ctx->line)[++i] != '\'')
-	{
-		tokens[token_n][++k] = (msh_ctx->line)[i];
-		// printf("%c", tokens[token_n][k]);
-	}
-	tokens[token_n][++k] = '\0';
+		tokens[t_n][++k] = (msh_ctx->line)[i];
+	tokens[t_n][++k] = '\0';
 	if ((msh_ctx->line)[i + 1] == '\'')
-	{
-		single_quote_token_saver(tokens, token_n, i + 1, msh_ctx);
+		single_quote_token_saver(tokens, t_n, i + 1, msh_ctx);
+	else if ((msh_ctx->line)[i + 1] == '\"')
+		double_quotes_token_saver(tokens, t_n, i + 1, msh_ctx);
+	else if ((msh_ctx->line)[i + 1] == '|')
 		return ;
-	}
-	if ((msh_ctx->line)[i + 1] == '\"')
-	{
-		double_quotes_token_saver(tokens, token_n, i + 1, msh_ctx);
-		return ;
-	}
-	if ((msh_ctx->line)[i + 1] == '|')
-	{
-		// printf("\n[single_quote_token_saver] PIPE\n");
-		return ;
-	}
-	if ((msh_ctx->line)[i + 1] != ' ' && (msh_ctx->line)[i + 1] != '\0') //добавить другие пробелы
-	{
-		regular_char_token_saver(tokens, token_n, i + 1, msh_ctx);
-		return ;
-	}
-	// printf("\n[single_quote_token_saver] END\n");
+	else if ((msh_ctx->line)[i + 1] != ' ' && (msh_ctx->line)[i + 1] != '\0')
+		regular_char_token_saver(tokens, t_n, i + 1, msh_ctx);
 }
 
-void	regular_char_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx)
-{
-	int	k;
-
-	while (1)
-	{
-		k = ft_strlen(tokens[token_n]) - 1;
-		// printf("\n[regular_char_token_saver] k=%d\n", k);
-		if ((msh_ctx->line)[i] == '\'')
-		{
-			single_quote_token_saver(tokens, token_n, i, msh_ctx);
-			return ;
-		}
-		if ((msh_ctx->line)[i] == '\"')
-		{
-			double_quotes_token_saver(tokens, token_n, i, msh_ctx);
-			return ;
-		}
-		if ((msh_ctx->line)[i] == '$' && (msh_ctx->line)[i + 1] != ' ' && (msh_ctx->line)[i + 1] != '\0' && (msh_ctx->line)[i + 1] != '?')//04.08 fix $TERM $ HOME //11.08 fix $
-		{
-			i = get_env_var_value_to_saver(tokens, token_n, i + 1, msh_ctx);
-			// i = get_env_var_value(line, i + 1, 0, envs);
-			i++; //TO DO  внести в get_env_var_value_to_saver //нельзя, тк используется в double_saver
-			continue; //04.08 fix $TERM$HOME - должен быть 1 аргумент
-		}
-		if ((msh_ctx->line)[i] == '$' && (msh_ctx->line)[i + 1] == '?')
-		{
-			// printf("regular\n");
-			i = handle_status_from_saver(tokens, token_n, i + 1, msh_ctx);
-			i++;
-			// printf("line[%d]: %c, tokens[token_n]: %s\n", i, line[i], tokens[token_n]);
-			continue;
-		}
-		if ((msh_ctx->line)[i] == ' ') //добавить другие пробелы
-			break ;
-		if ((msh_ctx->line)[i] == '\0')
-			break ;
-		tokens[token_n][++k] = (msh_ctx->line)[i];
-		// printf("k=%d: %c", k, tokens[token_n][k]);
-		if ((msh_ctx->line)[i] == '|' || (msh_ctx->line)[i + 1] == '|' || (msh_ctx->line)[i] == '>' || (msh_ctx->line)[i + 1] == '>' || (msh_ctx->line)[i] == '<' || (msh_ctx->line)[i + 1] == '<')
-			break;
-		i++;
-	}
-	tokens[token_n][++k] = '\0';
-	// printf("\n[regular_char_token_saver END]\n");
-}
-
-void	special_chars_token_saver(char **tokens, int token_n, char *line, int i)
+void	special_chars_token_saver(char **tokens, int t_n, char *line, int i)
 {
 	int	k;
 
 	k = -1;
-	// printf("\n[special_chars_token_saver]\n");
-	tokens[token_n][++k] = line[i];
+	tokens[t_n][++k] = line[i];
 	i++;
-	if ((line[i - 1] == '>' && line[i] == '>') || (line[i - 1] == '<' && line[i] == '<'))
+	if ((line[i - 1] == '>' && line[i] == '>') || \
+			(line[i - 1] == '<' && line[i] == '<'))
 	{
-		tokens[token_n][++k] = line[i];
+		tokens[t_n][++k] = line[i];
 		i++;
 	}
-	tokens[token_n][++k] = '\0';
-	// printf("\n[special_chars_token_saver END]\n");
+	tokens[t_n][++k] = '\0';
 }

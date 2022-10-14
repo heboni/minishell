@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 22:35:10 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/14 01:33:58 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 10:21:51 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	free_before_exit(t_msh *msh_ctx)
 	free(msh_ctx);
 }
 
-// lexer.c token_saver.c executor.c parser_handlers.c node.c+ 
+// executor.c parser_handlers.c node.c+
+// python3 -m norminette -R CheckForbiddenSourceHeader srcs/
 int	main(int argc, char **argv, char **env)
 {
 	t_msh	*msh_ctx;

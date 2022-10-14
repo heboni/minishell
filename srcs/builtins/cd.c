@@ -18,19 +18,25 @@
 //with only a relative or absolute path
 //getcwd, chdir 
 //chdir: In order for a directory to become the current directory, a process must have execute (search) access to the directory.
-int	exec_chdir(char	*dir_to, char *old_dir, char *new_dir)
+int	exec_chdir(t_msh *msh_ctx, char	*dir_to, char *old_dir, char *new_dir)
 {
 	if (chdir(dir_to) != 0)
 	{
 		printf("bash: cd: %s: No such file or directory\n", dir_to);
-		free (old_dir);
+		free(old_dir);
 		return (1);
 	}
 	else
 	{
 		new_dir = getcwd(NULL, 0); printf("new_dir: %s\n", new_dir);
+		if (!env_lst_update_node(msh_ctx->env_lst, "PWD", new_dir))
+			env_lst_push_bottom(&(msh_ctx->env_lst), "PWD", new_dir);
 		//заменить PWD на new_dir
 		//заменить OLDPWD на old_dir
+		if (!env_lst_update_node(msh_ctx->env_lst, "OLDPWD", old_dir))
+			env_lst_push_bottom(&(msh_ctx->env_lst), "OLDPWD", old_dir);
+		free(old_dir);
+		free(new_dir);
 	}
 	return (0);
 }
@@ -49,7 +55,7 @@ int	cd_builtin(t_msh *msh_ctx)
 		dir_to = getenv("HOME");
 	else
 		dir_to = *argv;
-	return (exec_chdir(dir_to, old_dir, new_dir));
+	return (exec_chdir(msh_ctx, dir_to, old_dir, new_dir));
 }
 
 // int	cd_builtin(t_msh *msh_ctx)

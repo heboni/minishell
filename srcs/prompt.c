@@ -48,7 +48,7 @@ char	*get_prompt(void)
 	int		cwd_start;
 	int		n;
 
-	home = getenv("HOME");
+	home = getenv("PWD");
 	getcwd(cwd, 999);
 	cwd_start = 0;
 	if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)

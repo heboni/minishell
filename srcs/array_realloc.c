@@ -18,12 +18,14 @@ int	*save_tmp_int_array(int **array, int *array_n)
 	int	i;
 
 	i = -1;
+	tmp_array = NULL;
 	tmp_array = (int *)malloc(sizeof(int) * *array_n);
 	if (tmp_array == NULL)
 		exit(STACK_OVERFLOW);
 	while (++i < *array_n)
 		tmp_array[i] = (*array)[i];
 	free(*array);
+	*array = NULL;
 	return (tmp_array);
 }
 
@@ -45,6 +47,7 @@ int	*int_array_realloc(int **array, int *array_n)
 		while (++i < (*array_n - 1))
 			(*array)[i] = tmp_array[i];
 		free(tmp_array);
+		tmp_array = NULL;
 	}
 	return (*array);
 }
@@ -55,6 +58,7 @@ char	**save_tmp_char_array(char **tokens, int toks_count)
 	int		i;
 
 	i = -1;
+	tmp_tokens = NULL;
 	tmp_tokens = (char **)malloc(sizeof(char *) * toks_count);
 	if (tmp_tokens == NULL)
 		exit(STACK_OVERFLOW);
@@ -63,8 +67,10 @@ char	**save_tmp_char_array(char **tokens, int toks_count)
 	{
 		tmp_tokens[i] = ft_strdup(tokens[i]);
 		free(tokens[i]);
+		tokens[i] = NULL;
 	}
 	free(tokens);
+	tokens = NULL;
 	return (tmp_tokens);
 }
 
@@ -87,8 +93,10 @@ char	**tokens_realloc(char **tokens, int toks_count)
 		{
 			tokens[i] = ft_strdup(tmp_tokens[i]);
 			free(tmp_tokens[i]);
+			tmp_tokens[i] = NULL;
 		}
 		free(tmp_tokens);
+		tmp_tokens = NULL;
 	}
 	return (tokens);
 }

@@ -40,8 +40,11 @@ void	env_lst_remove_n_node(t_env **envs, int n)
 		prev->next = n_node->next;
 	}
 	free(n_node->var_name);
+	n_node->var_name = NULL;
 	free(n_node->var_value);
+	n_node->var_value = NULL;
 	free(n_node);
+	n_node = NULL;
 }
 
 int	get_envs_count(t_env *envs)
@@ -54,7 +57,6 @@ int	get_envs_count(t_env *envs)
 		envs_count++;
 		envs = envs->next;
 	}
-	printf("[get_envs_count] %d\n", envs_count);
 	return (envs_count);
 }
 
@@ -83,6 +85,7 @@ char	*get_env_name_to_buildin(char *argv, int *k)
 			&& !(argv[i] == '\'' && argv[i + 1] == '='))
 	{
 	}
+	name = NULL;
 	name = (char *)malloc(sizeof(char) * i + 1);
 	if (name == NULL)
 		exit(STACK_OVERFLOW);

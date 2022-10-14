@@ -25,11 +25,10 @@ t_msh	*msh_ctx_init(char **env)
 	msh_ctx->status = 0;
 	msh_ctx->s_status = NULL;
 	msh_ctx->heredoc_stop_f = NULL;
-	msh_ctx->prompt = get_prompt();
 	return (msh_ctx);
 }
 
-// rl_clear_history();
+//rl_clear_history();
 void	free_before_exit(t_msh *msh_ctx)
 {
 	free_env_lst(&msh_ctx->env_lst);
@@ -50,9 +49,12 @@ int	main(int argc, char **argv, char **env)
 	msh_ctx = msh_ctx_init(env);
 	while (1)
 	{
+		msh_ctx->prompt = get_prompt();
 		msh_ctx->line = readline(msh_ctx->prompt);
 		if (!msh_ctx->line)
 		{
+			free(msh_ctx->prompt);
+			msh_ctx->prompt = NULL;
 			msh_ctx->status = 0;
 			break ;
 		}
@@ -60,11 +62,17 @@ int	main(int argc, char **argv, char **env)
 			add_history(msh_ctx->line);
 		msh_ctx->node = parser(msh_ctx);
 		if (msh_ctx->node == NULL || msh_ctx->not_valid_input == 1)
+		{
+			free(msh_ctx->prompt);
+			msh_ctx->prompt = NULL;
 			continue ;
+		}
+			
 		printf("\n[main] "); print_nodes_list(msh_ctx->node);
 		executor(msh_ctx);
 		free_nodes_lst(&msh_ctx->node_tmp);
 		free_string_array(msh_ctx->envs);
+		free(msh_ctx->prompt);
 	}
 	free_before_exit(msh_ctx);
 	exit(0);

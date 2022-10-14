@@ -17,10 +17,13 @@ void	env_lst_push_bottom(t_env **head, char *name, char *value)
 	t_env	*new;
 	t_env	*last_node;
 
+	new = NULL;
 	new = (t_env *)malloc(sizeof(t_env));
 	if (new == NULL)
 		exit(STACK_OVERFLOW);
+	new->var_name = NULL;
 	new->var_name = ft_strdup(name);
+	new->var_value = NULL;
 	if (value)
 		new->var_value = ft_strdup(value);
 	new->next = NULL;
@@ -80,6 +83,7 @@ int	env_lst_update_node(t_env *envs, char *name, char *value)
 		if (ft_strcmp(envs->var_name, name) == 0)
 		{
 			free(envs->var_value);
+			envs->var_value = NULL;
 			envs->var_value = ft_strdup(value);
 			return (1);
 		}

@@ -31,7 +31,7 @@ void	envs_saver(char **env, t_env **envs_lst)
 		while ((*env)[++i] != '=')
 		{
 		}
-		name = (char *)malloc(sizeof(char) * i + 1);
+		name = alloc(i + 1);
 		k = -1;
 		while (++k < i)
 			name[k] = (*env)[k];
@@ -53,6 +53,7 @@ char	*get_env_value_to_save(char *env, int i, int k)
 	int		l;
 
 	l = 0;
+	value = NULL;
 	value = (char *)malloc(sizeof(char) * (i - k) + 1);
 	if (value == NULL)
 		exit(STACK_OVERFLOW);

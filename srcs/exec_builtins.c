@@ -27,7 +27,7 @@ int	is_builtin(char *cmd_name)
 		is_builtin = 1;
 	else if (ft_strcmp(cmd_name, "unset") == 0)
 		is_builtin = 1;
-	else if (ft_strcmp(cmd_name, "echo") == 0)
+	else if (ft_strcmp(cmd_name, "env") == 0)
 		is_builtin = 1;
 	else if (ft_strcmp(cmd_name, "pwd") == 0)
 		is_builtin = 1;

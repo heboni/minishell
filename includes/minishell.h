@@ -40,17 +40,17 @@ typedef struct s_msh
 	char	*prompt;
 	char	*line;
 	t_node	*node;
-	t_node	*node_tmp; //указывает на одну память с node
+	t_node	*node_tmp;
 	t_env	*env_lst;
 	char	**envs;
 	int		status;
 	char	*s_status;
 	char	**tokens;
 	int		toks_count;
-	int		*exeption_indxs; //хранятся индексы токенов "|" '|' и редиректов в кавычках + внести индексы токенов $? "$?"
+	int		*exeption_indxs;
 	int		exeption_indxs_n;
 	int		not_valid_input;
-	int		cur_env_vars_len; //если $USER$TERM, то токен 1, token_len = len_env1_val + len_env2_val
+	int		cur_env_vars_len;
 	int		p_r;
 	int		p_wr;
 	int		is_stdin_pipe;

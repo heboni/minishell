@@ -57,7 +57,7 @@ void	lstclear(t_node **lst)
 	while (*lst)
 	{
 		next = (*lst)->next;
-		free(((*lst)));
+		free((*lst));
 		*lst = next;
 	}
 }
@@ -70,6 +70,10 @@ void	free_string_array(char **argv)
 	if (!argv)
 		return ;
 	while (argv[++i])
+	{
 		free(argv[i]);
+		argv[i] = NULL;
+	}
 	free(argv);
+	argv = NULL;
 }

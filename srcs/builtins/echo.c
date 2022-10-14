@@ -29,12 +29,10 @@ char	*get_echo_delimiter(char **argv, int n_flag)
 
 void	echo_print(char **argv, int n_flag)
 {
-	int		len;
 	char	*c;
 
 	while (*argv)
 	{
-		len = ft_strlen(*argv);
 		printf("%s", *argv);
 		argv++;
 		c = get_echo_delimiter(argv, n_flag);

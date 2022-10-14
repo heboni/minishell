@@ -6,85 +6,36 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 22:15:23 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/12 01:41:32 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 17:12:34 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-void	env_builtin_print(t_env *envs, int fd)
+void	env_builtin_print(t_env *envs)
 {
 	while (envs)
 	{
 		if (envs->var_value)
-		{
-			ft_putstr_fd(envs->var_name, fd);
-			ft_putstr_fd("=", fd);
-			ft_putstr_fd(envs->var_value, fd);
-			ft_putstr_fd("\n", fd);
-		}
+			printf("%s=%s\n", envs->var_name, envs->var_value);
 		envs = envs->next;
 	}
 }
 
-int	is_equal_symbol(char *argv)
+// env with no options or arguments
+int	env_builtin(t_msh *msh_ctx)
 {
-	while(*argv != '\0')
-	{
-		if (*argv == '=')
-			return (1);
-		argv++;
-	}
-	return (0);
-}
+	char	**argv;
 
-// void	add_var_from_env(t_env *envs, char *argv)
-// {
-	
-// }
-
-//env должен распечатывать переменные как в случае добавления новой, так и в случае вызова без аргументов
-// TO DO env TEST=test
-int	env_builtin(t_env *envs, char **argv, int fd)
-{
-	char	**tmp_argv;
-	char	*name;
-	// char	*value;
-	int		i;
-	int		k;
-	
-	if (!envs)
+	if (!msh_ctx->env_lst || !msh_ctx->node->argv)
 		return (-1);
-	if (!argv)
+	argv = msh_ctx->node->argv + 1;
+	if (*argv)
 	{
-		env_builtin_print(envs, fd);
-		return (0);
+		printf("bash: env: can't be executed with arguments\n");
+		return (1);
 	}
-	tmp_argv = argv;
-	//сперва проверить, что все переменные без значений есть //?
-	while (*tmp_argv != NULL)
-	{
-		name = get_env_name_to_buildin(*tmp_argv, &i, &k);
-		if (!get_env_n_if_exists(envs, name) && !is_equal_symbol(*tmp_argv))
-		{
-			ft_putstr_fd("env: ", fd);
-			ft_putstr_fd(*tmp_argv, fd);
-			ft_putstr_fd(": No such file or directory\n", fd);
-			free(name);
-			return (1); //в такой случае какой статус команды?
-		}
-		free(name);
-		tmp_argv++;
-	}
-	while (*argv != NULL)
-	{
-		//уже есть такая переменная
-		
-		// add_var_from_env(envs, *argv);
-		argv++;
-	}
-	env_builtin_print(envs, fd);
+	else
+		env_builtin_print(msh_ctx->env_lst);
 	return (0);
 }
-*/

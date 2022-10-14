@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 09:26:25 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/12 09:37:02 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 20:18:32 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ void	env_lst_remove_n_node(t_env **envs, int n)
 	if (!envs)
 		return ;
 	n_node = get_n_env_node(*envs, n);
-	printf("[env_lst_remove_node] n_node %s, %s\n", \
-		n_node->var_name, n_node->var_value);
 	if (n == 1)
 		*envs = n_node->next;
 	else
@@ -44,19 +42,53 @@ void	env_lst_remove_n_node(t_env **envs, int n)
 	free(n_node->var_name);
 	free(n_node->var_value);
 	free(n_node);
-	print_env_list(*envs);
 }
 
-void	print_env_list(t_env *envs)
+int	get_envs_count(t_env *envs)
 {
-	printf("\n---------------print_envs--------------\n");
+	int	envs_count;
+
+	envs_count = 0;
+	while (envs)
+	{
+		envs_count++;
+		envs = envs->next;
+	}
+	printf("[get_envs_count] %d\n", envs_count);
+	return (envs_count);
+}
+
+void	export_print_env_list(t_env *envs)
+{
 	if (!envs)
 		return ;
 	while (envs)
 	{
-		printf("%s, ", (char *)envs->var_name);
-		printf("%s \n", (char *)envs->var_value);
+		printf("declare -x %s", envs->var_name);
+		if (envs->var_value)
+			printf("=\"%s\"", envs->var_value);
+		printf("\n");
 		envs = envs->next;
 	}
-	printf("\n");
+}
+
+char	*get_env_name_to_buildin(char *argv, int *k)
+{
+	char	*name;
+	int		i;
+
+	i = -1;
+	while (argv[++i] != '=' && argv[i] != '\0' && \
+			!(argv[i] == '\"' && argv[i + 1] == '=') \
+			&& !(argv[i] == '\'' && argv[i + 1] == '='))
+	{
+	}
+	name = (char *)malloc(sizeof(char) * i + 1);
+	if (name == NULL)
+		exit(STACK_OVERFLOW);
+	*k = -1;
+	while (++(*k) < i)
+		name[*k] = argv[*k];
+	name[*k] = '\0';
+	return (name);
 }

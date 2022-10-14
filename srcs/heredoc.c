@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 09:06:01 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/11 15:06:06 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 14:21:02 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ void	ms_write_heredoc_file(t_msh *msh_ctx)
 			break ;
 		}
 		if (ft_strcmp(msh_ctx->heredoc_stop_f, str) == 0)
+		{
+			free(str);
 			break ;
+		}
 		write(msh_ctx->heredoc_fd, str, ft_strlen(str));
 		write(msh_ctx->heredoc_fd, "\n", 1);
 		free(str);

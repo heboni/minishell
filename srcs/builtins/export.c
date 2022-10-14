@@ -6,54 +6,31 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 23:17:49 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/12 01:32:49 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 20:18:27 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-void	export_print_env_list(t_env *envs, int fd)
+void	envs_swap(t_env *tmp_envs)
 {
-	printf("\n---------------export_print_env_list--------------\n");
-	if (!envs)
-		return ;
-	while (envs)
-	{
-		ft_putstr_fd("declare -x ", fd);
-		ft_putstr_fd(envs->var_name, fd);
-		if (envs->var_value)
-		{
-			ft_putstr_fd("=\"", fd);
-			ft_putstr_fd(envs->var_value, fd);
-			ft_putstr_fd("\"", fd);
-		}
-		ft_putstr_fd("\n", fd);
-		envs = envs->next;
-	}
-	printf("\n");
+	char	*tmp_name;
+	char	*tmp_value;
+
+	tmp_name = tmp_envs->var_name;
+	tmp_value = tmp_envs->var_value;
+	tmp_envs->var_name = (tmp_envs->next)->var_name;
+	tmp_envs->var_value = (tmp_envs->next)->var_value;
+	(tmp_envs->next)->var_name = tmp_name;
+	(tmp_envs->next)->var_value = tmp_value;
 }
 
-int	get_envs_count(t_env *envs)
-{
-	int	envs_count;
-	
-	envs_count = 0;
-	while (envs)
-	{
-		envs_count++;
-		envs = envs->next;
-	}
-	printf("[get_envs_count] %d\n", envs_count);
-	return (envs_count);
-}
-
-void	alphabetical_envs_print(t_env *envs, int fd)
+void	alphabetical_envs_print(t_env *envs)
 {
 	t_env	*tmp_envs;
 	int		envs_count;
 	int		i;
-	
+
 	i = -1;
 	envs_count = get_envs_count(envs);
 	while (++i < envs_count)
@@ -63,89 +40,73 @@ void	alphabetical_envs_print(t_env *envs, int fd)
 		{
 			if (tmp_envs->next)
 			{
-				// printf("\n%s, %s: ", (tmp_envs->var_name), ((tmp_envs->next)->var_name));
 				if (tmp_envs->var_name[0] > (tmp_envs->next)->var_name[0])
-				{
-					char *tmp_name = tmp_envs->var_name;
-					char *tmp_value = tmp_envs->var_value;
-					tmp_envs->var_name = (tmp_envs->next)->var_name;
-					tmp_envs->var_value = (tmp_envs->next)->var_value;
-					(tmp_envs->next)->var_name = tmp_name;
-					(tmp_envs->next)->var_value = tmp_value;
-				}
+					envs_swap(tmp_envs);
 			}
 			tmp_envs = tmp_envs->next;
 		}
 	}
-	export_print_env_list(envs, fd);
+	export_print_env_list(envs);
 }
 
-char	*get_env_name_to_buildin(char *argv, int *i, int *k)
+void	export_core(t_env *envs, char *argv, char *name, int k)
 {
-	char	*name;
-	
-	*i = -1;
-	while (argv[++(*i)] != '=' && argv[(*i)] != '\0' && !(argv[(*i)] == '\"' && argv[(*i) + 1] == '=') \
-													 && !(argv[(*i)] == '\'' && argv[(*i) + 1] == '=')) {}
-	name = (char *)malloc(sizeof(char) * (*i) + 1); 
-	if (name == NULL)
-		exit(STACK_OVERFLOW);
-	*k = -1;
-	while (++(*k) < *i)
-		name[*k] = argv[*k];
-	name[*k] = '\0';
-	return (name);
-}
-
-int	export_builtin(t_env *envs, char **argv, int fd)
-{
-	char	*name;
 	char	*value;
 	int		i;
+
+	if (argv[k] != '\0')
+	{
+		if (argv[k] == '\'' || argv[k] == '\"')
+			k = k + 3;
+		else
+			k++;
+		i = k;
+		while (argv[i++] != '\0')
+		{
+		}
+		value = get_env_value_to_save(argv, i, k);
+		if (!env_lst_update_node(envs, name, value))
+			env_lst_push_bottom(&envs, name, value);
+		free(value);
+	}
+	else
+		env_lst_push_bottom(&envs, name, NULL);
+}
+
+void	export_arg_handler(t_msh *msh_ctx, char *argv)
+{
+	char	*name;
 	int		k;
 
-	if (!envs)
+	name = get_env_name_to_buildin(argv, &k);
+	if (is_not_valid(name))
+	{
+		printf("bash: export: '%s': not a valid identifier\n", name);
+		msh_ctx->status = 1;
+	}
+	else
+		export_core(msh_ctx->env_lst, argv, name, k);
+	free(name);
+}
+
+int	export_builtin(t_msh *msh_ctx)
+{
+	char	**argv;
+
+	if (!msh_ctx->env_lst || !msh_ctx->node->argv)
 		return (-1);
-	if (!argv)
-		alphabetical_envs_print(envs, fd);
+	argv = msh_ctx->node->argv + 1;
+	if (!*argv)
+		alphabetical_envs_print(msh_ctx->env_lst);
 	else
 	{
 		while (*argv != NULL)
 		{
-			name = get_env_name_to_buildin(*argv, &i, &k);
-			// printf("%s\n", *argv); printf("[export] i=%d, k=%d\n", i, k); printf("[export] name: %s\n", name);
-			int j = is_not_valid(name);
-			if (j || (j == 0 && ft_isdigit(name[0])))
-			{
-				printf("bash: export: '%s' '%c': not a valid identifier\n", name, (*argv)[j]);
-			}
-			else
-			{
-				if ((*argv)[i] != '\0')
-				{
-					if ((*argv)[i] == '\'' || (*argv)[i] == '\"')
-					{
-						k = k + 3; //после '=' "="
-						i = i + 3;
-					}
-					else
-					{
-						k++; //после =
-						i++;
-					}
-					while ((*argv)[i++] != '\0') {}
-					value = get_env_value_to_save(*argv, i, k); // printf("[export] value: %s\n", value);
-					if (!env_lst_update_node(envs, name, value))
-						env_lst_push_bottom(&envs, name, value);
-					free(value);
-				}
-				else
-					env_lst_push_bottom(&envs, name, NULL);
-			}
-			free(name);
+			export_arg_handler(msh_ctx, *argv);
 			argv++;
 		}
 	}
+	if (msh_ctx->status == 1)
+		return (1);
 	return (0);
 }
-*/

@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/14 01:23:14 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 19:57:40 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,25 +83,25 @@ int		*int_array_realloc(int **array, int *array_n);
 int		*int_array_realloc1(int *array, int array_n);
 int		**int_array_realloc0(int **array, int *array_n);
 
-//lexer
+// lexer
 int		single_quote_lexer(char *line, int i, t_msh *msh_ctx);
 int		double_quotes_lexer(char *line, int i, t_msh *msh_ctx);
 int		regular_char_lexer(char *line, int i, t_msh *msh_ctx);
 int		special_chars_lexer(char *line, int i);
 int		handle_status_from_lexer(int i, t_msh *msh_ctx);
 
-//token_saver
+// token_saver
 void	single_quote_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
 void	double_quotes_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
 void	regular_char_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
 void	special_chars_token_saver(char **tokens, int token_n, char *line, int i);
 int		handle_status_from_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
 
-//tokens_to_ast_nodes
+// tokens_to_ast_nodes
 t_node 	*tokens_to_ast_nodes(char **tokens, int toks_count, t_msh *msh_ctx);
 int		is_in_exception_indexes(t_msh *msh_ctx, int token_i);
 
-//node
+// node
 void	print_nodes_list(t_node *ast_nodes);
 int		is_special_token(char **tokens, int t_i, t_msh *msh_ctx);
 int		is_special_symbols(char *token);
@@ -112,7 +112,7 @@ char	**get_node_argv(char **tokens, int *token_i, t_msh *msh_ctx, t_node *new);
 int		is_pipe_token(char **tokens, int t_i, t_msh *msh_ctx);
 int		is_redirect_token(char **tokens, int t_i, t_msh *msh_ctx);
 
-//redirect
+// redirect
 int		redir_token_handler(char **tokens, int *t_i, t_msh *msh_ctx, t_node *new);
 
 // get_env
@@ -124,29 +124,32 @@ void	env_val_len_by_name_from_lst(char *name, t_msh *msh_ctx);
 // get_cmd_path
 char	*get_cmd_path(char *cmd_name, t_msh *msh_ctx);
 
-//executor
+// executor
 void	executor(t_msh *msh_ctx);
-void	exec_builtins(t_msh *msh_ctx);
-int		is_builtin(char *cmd_name);
 
-//heredoc
+// exec
+int		is_builtin(char *cmd_name);
+void	proxy_to_builtins(t_msh *msh_ctx);
+void	exec_builtin(t_msh *msh_ctx);
+
+// heredoc
 void	ms_write_heredoc_file(t_msh *msh_ctx);
 
 // buildins
+int		cd_builtin(t_msh *msh_ctx);
+int		echo_builtin(t_msh *msh_ctx);
 int		exit_builtin(t_msh *msh_ctx);
 int		pwd_builtin(t_msh *msh_ctx);
-int		echo_builtin(t_msh *msh_ctx);
-int		env_builtin(t_env *envs, char **argv, int fd);
-int		export_builtin(t_env *envs, char **argv, int fd);
-char	*get_env_name_to_buildin(char *argv, int *i, int *k);
-int		unset(t_env **envs, char **argv, int fd);
+int		env_builtin(t_msh *msh_ctx);
+int		export_builtin(t_msh *msh_ctx);
+int		unset_builtin(t_msh *msh_ctx);
 int		is_not_valid(char *argv);
 
-//free_utils
+// free_utils
 void	free_nodes_lst(t_node **ast_nodes);
 void	free_string_array(char **argv);
 
-//utils
+// utils
 char	*alloc(int token_len);
 int 	get_tokens_count(char **tokens);
 void	print_string_array(char **argv, int count);

@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 09:49:28 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 01:40:39 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/14 11:15:26 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	echo_builtin(t_msh *msh_ctx)
 	if (*argv == NULL)
 	{
 		printf("\n");
-		return (0); //exit?
+		return (0);
 	}
 	else if (ft_strcmp("-n", *argv) == 0)
 	{
@@ -60,7 +60,7 @@ int	echo_builtin(t_msh *msh_ctx)
 		argv++;
 	}
 	echo_print(argv, n_flag);
-	return (0); //exit?
+	return (0);
 }
 
 // int	echo_builtin0(t_msh *msh_ctx) //(char **argv, int fd)

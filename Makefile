@@ -30,6 +30,7 @@ SRCS_FILES	= main.c							\
 			  lexer.c							\
 			  lexer2.c							\
 			  token_saver.c						\
+			  token_saver2.c					\
 			  check_input.c 					\
 			  array_realloc.c 					\
 			  envs_lst_saver.c					\
@@ -42,6 +43,7 @@ SRCS_FILES	= main.c							\
 			  get_cmd_path.c 					\
 			  redirect.c						\
 			  prompt.c							\
+			  exec_builtins.c 					\
 			  executor.c 						\
 			  heredoc.c 						\
 			  utils.c							\

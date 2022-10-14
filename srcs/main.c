@@ -12,10 +12,16 @@
 
 #include "minishell.h"
 
-t_msh	*msh_ctx_init(char **env)
+t_msh	*msh_ctx_init(int argc, char **argv, char **env)
 {
 	t_msh	*msh_ctx;
 
+	if (argc != 1 || *(argv + 1))
+	{
+		printf("No argvs, please. See u soon!\n");
+		exit(INPUT_ERROR);
+	}
+	msh_ctx = NULL;
 	msh_ctx = (t_msh *)malloc(sizeof(t_msh));
 	if (!msh_ctx)
 		exit(STACK_OVERFLOW);
@@ -38,17 +44,50 @@ void	free_before_exit(t_msh *msh_ctx)
 	free(msh_ctx);
 }
 
+void	sigtstp_handler(int sig) //DEL
+{
+	if (sig == SIGTSTP)
+	{
+		ft_putstr_fd("\nVi nazhali \"Ctrl+\\\"", 1);
+		ft_putstr_fd("\n", 1);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
+void	sigint_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		ft_putstr_fd("\nVi nazhali \"Ctrl+C\"", 1);
+		ft_putstr_fd("\n", 1);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
+void	sigquit_handler(int sig)
+{
+	if (sig == SIGQUIT)
+	{
+		ft_putstr_fd("exit\n", 1);
+		// exit(1);
+	}
+}
+
 // executor.c parser_handlers.c node.c+
 // python3 -m norminette -R CheckForbiddenSourceHeader srcs/
 int	main(int argc, char **argv, char **env)
 {
 	t_msh	*msh_ctx;
 
-	if (argc != 1 || *(argv + 1))
-		exit(INPUT_ERROR);
-	msh_ctx = msh_ctx_init(env);
+	msh_ctx = msh_ctx_init(argc, argv, env);
 	while (1)
 	{
+		signal(SIGINT, sigint_handler);
+		signal(SIGTSTP, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN); //Ctrl-D не перехватывается
+		// signal(SIGQUIT, sigquit_handler);
 		msh_ctx->prompt = get_prompt();
 		msh_ctx->line = readline(msh_ctx->prompt);
 		if (!msh_ctx->line)
@@ -67,7 +106,6 @@ int	main(int argc, char **argv, char **env)
 			msh_ctx->prompt = NULL;
 			continue ;
 		}
-			
 		printf("\n[main] "); print_nodes_list(msh_ctx->node);
 		executor(msh_ctx);
 		free_nodes_lst(&msh_ctx->node_tmp);

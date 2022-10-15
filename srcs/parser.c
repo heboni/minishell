@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:19:51 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 09:45:27 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/15 16:41:07 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,28 @@
 t_node	*parser(t_msh *msh_ctx)
 {
 	t_node	*ast_nodes;
-	char	**tokens;
 
 	msh_ctx->not_valid_input = 0;
 	msh_ctx->exeption_indxs = NULL;
 	msh_ctx->exeption_indxs_n = 0;
-	tokens = get_tokens(msh_ctx->line, msh_ctx);
-	if (tokens == NULL)
+	get_tokens(msh_ctx->line, msh_ctx);
+	print_string_array(msh_ctx->tokens, 0);
+	if (msh_ctx->tokens == NULL)
 	{
 		free(msh_ctx->line);
 		return (NULL);
 	}
-	msh_ctx->toks_count = get_tokens_count(tokens);
+	msh_ctx->toks_count = get_tokens_count(msh_ctx->tokens);
 	printf("toks_count: %d\n", msh_ctx->toks_count); //
 	print_int_array(msh_ctx->exeption_indxs, msh_ctx->exeption_indxs_n); //
-	check_valid_input(tokens, msh_ctx->toks_count, msh_ctx);
+	check_valid_input(msh_ctx->tokens, msh_ctx->toks_count, msh_ctx);
 	if (msh_ctx->not_valid_input == 1)
 	{
 		msh_ctx->status = 258;
 		free_from_parser(msh_ctx);
 		return (NULL);
 	}
-	ast_nodes = tokens_to_ast_nodes(tokens, msh_ctx->toks_count, msh_ctx);
+	ast_nodes = tokens_to_ast_nodes(msh_ctx->tokens, msh_ctx->toks_count, msh_ctx);
 	free_from_parser(msh_ctx);
 	return (ast_nodes);
 }

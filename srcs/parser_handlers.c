@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_handlers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 23:54:38 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 10:38:28 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/15 16:30:00 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	regular_chars_token_handler(int i, t_msh *msh_ctx, int *toks_count)
 	tmp_i = i;
 	i = regular_char_lexer(msh_ctx->line, i, msh_ctx);
 	token_len = i - tmp_i + msh_ctx->cur_env_vars_len;
-	// printf("\ni: %d, tmp_i: %d, msh_ctx->cur_env_vars_len: %d, token_len: %d", i, tmp_i, msh_ctx->cur_env_vars_len, token_len); 
+	printf("\ni: %d, tmp_i: %d, msh_ctx->cur_env_vars_len: %d, token_len: %d", i, tmp_i, msh_ctx->cur_env_vars_len, token_len); 
 	if (token_len != 0)
 	{
 		(*toks_count)++;

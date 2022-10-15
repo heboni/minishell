@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 12:45:21 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/12 22:42:45 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/15 16:06:44 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,16 @@ char	*get_redirect_ll_file(int *t_i, t_node *new, t_msh *msh_ctx)
 	int		fd;
 
 	if (new->ll_f)
+	{
 		free(new->ll_f);
+		new->ll_f = NULL;
+	}
 	(*t_i)++;
+	f_name = NULL;
 	f_name = ft_strdup((msh_ctx->tokens)[*t_i]);
 	if (msh_ctx->heredoc_stop_f)
 		free(msh_ctx->heredoc_stop_f);
+	msh_ctx->heredoc_stop_f = NULL;
 	msh_ctx->heredoc_stop_f = ft_strdup(f_name);
 	fd = open(".del", O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd == -1)

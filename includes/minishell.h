@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/14 19:57:40 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/15 15:47:45 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 # define SH_FG_GREEN "\033[32m"
 # define SH_FG_RESET "\033[39m"
 # define SH_FG_CYAN "\033[36m"
+
+// int	g_lobal_status;
 
 typedef struct s_msh
 {
@@ -134,6 +136,10 @@ void	exec_builtin(t_msh *msh_ctx);
 
 // heredoc
 void	ms_write_heredoc_file(t_msh *msh_ctx);
+
+// signals
+void	sigint_handler(int sig);
+int event(void);
 
 // buildins
 int		cd_builtin(t_msh *msh_ctx);

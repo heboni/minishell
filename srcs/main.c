@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 22:35:10 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/14 10:21:51 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/15 15:47:54 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,39 +40,9 @@ void	free_before_exit(t_msh *msh_ctx)
 	free_env_lst(&msh_ctx->env_lst);
 	if (msh_ctx->heredoc_stop_f)
 		free(msh_ctx->heredoc_stop_f);
-	free(msh_ctx->prompt);
+	if (msh_ctx->prompt)
+		free(msh_ctx->prompt);
 	free(msh_ctx);
-}
-
-void	sigtstp_handler(int sig) //DEL
-{
-	if (sig == SIGTSTP)
-	{
-		ft_putstr_fd("\nVi nazhali \"Ctrl+\\\"", 1);
-		ft_putstr_fd("\n", 1);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-}
-
-void	sigint_handler(int sig)
-{
-	if (sig == SIGINT)
-	{
-		ft_putstr_fd("\nVi nazhali \"Ctrl+C\"", 1);
-		ft_putstr_fd("\n", 1);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-}
-
-void	sigquit_handler(int sig)
-{
-	if (sig == SIGQUIT)
-	{
-		ft_putstr_fd("exit\n", 1);
-		// exit(1);
-	}
 }
 
 // executor.c parser_handlers.c node.c+
@@ -81,22 +51,17 @@ int	main(int argc, char **argv, char **env)
 {
 	t_msh	*msh_ctx;
 
+	rl_catch_signals = 0;
+	rl_event_hook=event;
 	msh_ctx = msh_ctx_init(argc, argv, env);
 	while (1)
 	{
-		signal(SIGINT, sigint_handler);
-		signal(SIGTSTP, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN); //Ctrl-D не перехватывается
-		// signal(SIGQUIT, sigquit_handler);
+		signal(SIGINT, sigint_handler); //Ctrl-C
+		signal(SIGQUIT, SIG_IGN); //Ctrl-\ ignore
 		msh_ctx->prompt = get_prompt();
 		msh_ctx->line = readline(msh_ctx->prompt);
 		if (!msh_ctx->line)
-		{
-			free(msh_ctx->prompt);
-			msh_ctx->prompt = NULL;
-			msh_ctx->status = 0;
-			break ;
-		}
+			break ; //Ctrl-D
 		if (msh_ctx->line && ft_strlen(msh_ctx->line))
 			add_history(msh_ctx->line);
 		msh_ctx->node = parser(msh_ctx);

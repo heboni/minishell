@@ -45,6 +45,7 @@ SRCS_FILES	= main.c							\
 			  prompt.c							\
 			  exec_builtins.c 					\
 			  executor.c 						\
+			  signals.c 						\
 			  heredoc.c 						\
 			  utils.c							\
 			  utils_special.c					\

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 09:49:28 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 11:15:26 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/15 16:48:31 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	echo_print(char **argv, int n_flag)
 	while (*argv)
 	{
 		printf("%s", *argv);
+		// ft_putstr_fd(*argv, 1);
 		argv++;
 		c = get_echo_delimiter(argv, n_flag);
 		printf("%s", c);

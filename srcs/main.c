@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 22:35:10 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/14 10:21:51 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/15 16:19:17 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,10 @@ int	main(int argc, char **argv, char **env)
 	msh_ctx = msh_ctx_init(argc, argv, env);
 	while (1)
 	{
-		signal(SIGINT, sigint_handler);
-		signal(SIGTSTP, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN); //Ctrl-D не перехватывается
-		// signal(SIGQUIT, sigquit_handler);
+		// signal(SIGINT, sigint_handler);
+		// signal(SIGTSTP, SIG_IGN);
+		// signal(SIGQUIT, SIG_IGN); //Ctrl-D не перехватывается
+		// // signal(SIGQUIT, sigquit_handler);
 		msh_ctx->prompt = get_prompt();
 		msh_ctx->line = readline(msh_ctx->prompt);
 		if (!msh_ctx->line)

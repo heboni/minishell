@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:17:05 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 00:34:10 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/15 16:50:10 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*alloc(int token_len)
 
 	i = -1;
 	s = NULL;
-	s = (char *)malloc(sizeof(char) * token_len);
+	s = (char *)malloc(sizeof(char) * (token_len + 1));
 	if (s == NULL)
 		exit(STACK_OVERFLOW);
 	while (++i < token_len)
@@ -39,7 +39,8 @@ void	print_string_array(char **argv, int count)
 	{
 		while (*argv != NULL)
 		{
-			printf("%s\n", *argv);
+			ft_putstr_fd_nl(NULL, *argv, 1, 1);
+			// printf("%s\n", *argv);
 			argv++;
 		}
 	}

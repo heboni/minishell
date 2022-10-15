@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_saver2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 10:19:29 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 10:20:59 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/15 16:36:24 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,5 @@ void	regular_char_token_saver(char **tokens, int t_n, int i, t_msh *msh_ctx)
 		i++;
 	}
 	tokens[t_n][++k] = '\0';
+	printf("\n%d\n", k);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 14:26:06 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 02:08:57 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 19:09:07 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	handle_status_from_lexer(int i, t_msh *msh_ctx)
 {
 	if (msh_ctx->s_status)
 		free(msh_ctx->s_status);
-	msh_ctx->s_status = ft_itoa(msh_ctx->status);
+	msh_ctx->s_status = ft_itoa(g_lobal_status);
 	msh_ctx->cur_env_vars_len += ft_strlen(msh_ctx->s_status);
 	return (i);
 }

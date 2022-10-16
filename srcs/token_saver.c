@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_saver.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 07:39:35 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 10:20:53 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 17:54:04 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	single_quote_token_saver(char **tokens, int t_n, int i, t_msh *msh_ctx)
 	int	k;
 
 	k = ft_strlen(tokens[t_n]) - 1;
-	while ((msh_ctx->line)[++i] != '\'')
+	while ((msh_ctx->line)[++i] != '\'' && (msh_ctx->line)[i] != '\0')
 		tokens[t_n][++k] = (msh_ctx->line)[i];
 	tokens[t_n][++k] = '\0';
 	if ((msh_ctx->line)[i + 1] == '\'')

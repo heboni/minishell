@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 23:17:49 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 20:18:27 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 19:06:58 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	export_arg_handler(t_msh *msh_ctx, char *argv)
 	if (is_not_valid(name))
 	{
 		printf("bash: export: '%s': not a valid identifier\n", name);
-		msh_ctx->status = 1;
+		g_lobal_status = 1;
 	}
 	else
 		export_core(msh_ctx->env_lst, argv, name, k);
@@ -106,7 +106,7 @@ int	export_builtin(t_msh *msh_ctx)
 			argv++;
 		}
 	}
-	if (msh_ctx->status == 1)
+	if (g_lobal_status == 1)
 		return (1);
 	return (0);
 }

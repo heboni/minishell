@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:17:05 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/15 16:50:10 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 19:08:13 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	print_string_array(char **argv, int count)
 		while (*argv != NULL)
 		{
 			ft_putstr_fd_nl(NULL, *argv, 1, 1);
-			// printf("%s\n", *argv);
 			argv++;
 		}
 	}

@@ -45,6 +45,7 @@ SRCS_FILES	= main.c							\
 			  prompt.c							\
 			  exec_builtins.c 					\
 			  executor.c 						\
+			  executor2.c 						\
 			  signals.c 						\
 			  heredoc.c 						\
 			  utils.c							\
@@ -57,8 +58,7 @@ SRCS 		= $(addprefix $(SRCS_DIR), $(SRCS_FILES))
 OBJS		= $(addprefix $(BUILD_DIR), $(OBJS_FILES))
 DEPS		= $(OBJS:.o=.d)
 
-CC			= gcc
-# CFLAGS		=  -MMD
+CC			= cc
 CFLAGS		= -Wall -Werror -Wextra -MMD
 LIBS		= -lreadline
 

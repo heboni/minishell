@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   msh_node.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:35:27 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/13 07:55:49 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 19:59:52 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MSH_AST_H
-# define MSH_AST_H
+#ifndef MSH_NODE_H
+# define MSH_NODE_H
 
 typedef enum s_redirect_type
 {
 	MSH_CMD,
-	MSH_REDIRECT_R, //>
+	MSH_REDIRECT_R,
 	MSH_REDIRECT_RR,
-	MSH_REDIRECT_L, //<
+	MSH_REDIRECT_L,
 	MSH_REDIRECT_LL,
 	MSH_TYPE_END
 }				t_redirect_type;
@@ -28,18 +28,17 @@ typedef enum s_redirect_type
 //cmd_status: если != 0, не выполнять cmd
 typedef struct s_node
 {
-	t_redirect_type	type;  //TO DO delete
-	int			fd_in;
-	int			fd_out;
-	int			cmd_status;
-	char		*cmd_name;
-	char		*path;
-	char		**argv;
-	int			argv_count;
-	char		*r_f;
-	char		*rr_f;
-	char		*l_f;
-	char		*ll_f;
+	int				fd_in;
+	int				fd_out;
+	int				cmd_status;
+	char			*cmd_name;
+	char			*path;
+	char			**argv;
+	int				argv_count;
+	char			*r_f;
+	char			*rr_f;
+	char			*l_f;
+	char			*ll_f;
 	struct s_node	*next;
 }				t_node;
 

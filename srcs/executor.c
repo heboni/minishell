@@ -3,110 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 16:18:30 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/16 15:09:00 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 20:10:17 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//Реакция на нажатие Ctrl-"C" и Ctrl-"\" в дочернем процессе pid==0
-static void	signal_while_child_handler(int sig)
+void	ft_puterror(char *s1, char *s2)
 {
-	if (sig == SIGINT)
-	{
-		ft_putstr_fd("\n\"Ctrl+C\" while_child was pressed\n", 1);
-		rl_done = 1;
-		// g_lobal_status = 130;
-	}
-	if (sig == SIGQUIT)
-	{
-		ft_putstr_fd("Quit\n", 1);
-		ft_putstr_fd("\"Ctrl+\\\" while_child was pressed\n", 1);
-		// g_lobal_status = 130;
-	}
+	ft_putstr_fd(s1, 2);
+	ft_putstr_fd(s2, 2);
+	ft_putstr_fd("\n", 2);
+	exit(-2);
 }
 
-void	signal_handler(pid_t pid, t_msh *msh_ctx)
+void	pipe_call(int *fd)
 {
-	int	w_status;
-	int w_code;
-
-	rl_event_hook=event;
-	signal(SIGINT, signal_while_child_handler);
-	signal(SIGQUIT, signal_while_child_handler);
-	waitpid(pid, &w_status, 0);
-	if (WIFEXITED(w_status))
+	if (pipe(fd) == -1)
 	{
-		w_code = WEXITSTATUS(w_status);
-		msh_ctx->status = w_code;
+		ft_putstr_fd_nl("Pipe error: ", strerror(errno), 2, 1);
+		g_lobal_status = errno;
+		exit(g_lobal_status);
 	}
-}
-
-void	status_handler(pid_t pid, t_msh *msh_ctx)
-{
-	int	w_status;
-	int w_code;
-
-	waitpid(pid, &w_status, 0);
-	if (WIFEXITED(w_status))
-	{
-		w_code = WEXITSTATUS(w_status);
-		msh_ctx->status = w_code;
-	}
-}
-
-void	one_cmd_executor(t_msh *msh_ctx)
-{
-	pid_t	pid;
-
-	if (msh_ctx->node->cmd_status != 0)
-		return ;
-	rl_catch_signals = 0;
-	rl_event_hook=event;
-	pid = fork();
-	if (pid < 0)
-		ft_putstr_fd("Fork error\n", 2);
-	else if (pid == 0)
-	{
-		printf("one_cmd_executor CHILD!!\n");
-		signal_handler(0, msh_ctx);
-		ms_write_heredoc_file(msh_ctx);
-		if (msh_ctx->is_stdin_pipe)
-			dup2(msh_ctx->p_r, 0);
-		if (msh_ctx->is_stdout_pipe)
-			dup2(msh_ctx->p_wr, 1);
-		if (msh_ctx->node->fd_out != 1)
-		{
-			dup2(msh_ctx->node->fd_out, 1);
-			close(msh_ctx->node->fd_out);
-		}
-		if (msh_ctx->node->fd_in != 0)
-		{
-			dup2(msh_ctx->node->fd_in, 0);
-			close(msh_ctx->node->fd_in);
-		}
-		if (is_builtin(msh_ctx->node->cmd_name))
-		{
-			proxy_to_builtins(msh_ctx);
-			exit(msh_ctx->status);
-		}
-		else if (execve(msh_ctx->node->path, msh_ctx->node->argv, msh_ctx->envs) == -1)
-		{
-			ft_putstr_fd("Execve error: ", 2);
-			ft_putstr_fd(strerror(errno), 2); 
-			ft_putstr_fd("\n", 2);
-			exit(-2);
-		}
-	}
-	else
-	{
-		signal_handler(pid, msh_ctx);
-		// status_handler(pid, msh_ctx);
-	}
-		
 }
 
 void	pre_executer(t_msh *msh_ctx, int fd_r, int fd_wr)
@@ -123,17 +44,11 @@ void	pre_executer(t_msh *msh_ctx, int fd_r, int fd_wr)
 	}
 }
 
-// 	if (pipe(pipefd) == -1)
-// 	{
-// 		ft_putstr_fd_nl("Pipe error: ", strerror(errno), 2);
-// 		msh_ctx->status = errno;
-// 		return ;
-// 	}
 void	pipes_executor(t_msh *msh_ctx)
 {
 	int		fd[4];
 
-	pipe(fd);
+	pipe_call(fd);
 	fd[2] = fd[0];
 	fd[3] = fd[1];
 	msh_ctx->p_r = 0;

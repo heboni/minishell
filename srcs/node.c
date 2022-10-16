@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 20:54:51 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/13 07:40:40 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 20:09:42 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,38 +120,35 @@ t_node	*get_last_ast_node(t_node *head)
 	return (head);
 }
 
-void	print_nodes_list(t_node *node)
-{	
-	if (node == NULL)
-	{
-		printf("[print_nodes_list NO_LIST]\n");
-		return ;
-	}
-	printf("[print_nodes_list]\n");
-	while (node)
-	{
-		printf("node:   ");
-		if (node->type == MSH_CMD)
-		{
-			printf("CMD->NAME: %s\n", node->cmd_name);
-			printf("        CMD->PATH: %s\n", node->path);
-			if (node->argv)
-			{
-				char **cmd_argv = node->argv;
-				printf("        CMD->ARGV: ");
-				while (*cmd_argv != NULL)
-				{
-					printf("%s, ", *cmd_argv);
-					cmd_argv++;
-				}
-				printf("\n");
-			}
-			printf("        r_f: %s\n", node->r_f);
-			printf("        rr_f: %s\n", node->rr_f);
-			printf("        l_f: %s\n", node->l_f);
-			printf("        ll_f: %s\n", node->ll_f);
-		}
-		node = node->next;
-	}
-	printf("[print_nodes_list END]\n\n");
-}
+// void	print_nodes_list(t_node *node)
+// {	
+// 	if (node == NULL)
+// 	{
+// 		printf("[print_nodes_list NO_LIST]\n");
+// 		return ;
+// 	}
+// 	printf("[print_nodes_list]\n");
+// 	while (node)
+// 	{
+// 		printf("node:   ");
+// 		printf("CMD->NAME: %s\n", node->cmd_name);
+// 			printf("        CMD->PATH: %s\n", node->path);
+// 			if (node->argv)
+// 			{
+// 				char **cmd_argv = node->argv;
+// 				printf("        CMD->ARGV: ");
+// 				while (*cmd_argv != NULL)
+// 				{
+// 					printf("%s, ", *cmd_argv);
+// 					cmd_argv++;
+// 				}
+// 				printf("\n");
+// 			}
+// 			printf("        r_f: %s\n", node->r_f);
+// 			printf("        rr_f: %s\n", node->rr_f);
+// 			printf("        l_f: %s\n", node->l_f);
+// 			printf("        ll_f: %s\n", node->ll_f);
+// 		node = node->next;
+// 	}
+// 	printf("[print_nodes_list END]\n\n");
+// }

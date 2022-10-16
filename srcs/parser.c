@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 22:19:51 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/16 14:57:11 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 19:11:19 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,21 @@ t_node	*parser(t_msh *msh_ctx)
 	msh_ctx->exeption_indxs = NULL;
 	msh_ctx->exeption_indxs_n = 0;
 	get_tokens(msh_ctx->line, msh_ctx);
-	// print_string_array(msh_ctx->tokens, 0);
 	if (msh_ctx->tokens == NULL)
 	{
 		free(msh_ctx->line);
 		return (NULL);
 	}
 	msh_ctx->toks_count = get_tokens_count(msh_ctx->tokens);
-	// printf("toks_count: %d\n", msh_ctx->toks_count); //
-	// print_int_array(msh_ctx->exeption_indxs, msh_ctx->exeption_indxs_n); //
 	check_valid_input(msh_ctx->tokens, msh_ctx->toks_count, msh_ctx);
 	if (msh_ctx->not_valid_input == 1)
 	{
-		msh_ctx->status = 258;
+		g_lobal_status = 258;
 		free_from_parser(msh_ctx);
 		return (NULL);
 	}
-	ast_nodes = tokens_to_ast_nodes(msh_ctx->tokens, msh_ctx->toks_count, msh_ctx);
+	ast_nodes = tokens_to_ast_nodes(msh_ctx->tokens, \
+										msh_ctx->toks_count, msh_ctx);
 	free_from_parser(msh_ctx);
 	return (ast_nodes);
 }

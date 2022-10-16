@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 14:24:04 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/15 15:47:45 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 20:03:10 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 
 # include "libft.h"
 # include "msh_node.h"
-# include "env.h"
 
 # define STACK_OVERFLOW -1
 # define INPUT_ERROR	-2
@@ -35,7 +34,14 @@
 # define SH_FG_RESET "\033[39m"
 # define SH_FG_CYAN "\033[36m"
 
-// int	g_lobal_status;
+int	g_lobal_status;
+
+typedef struct s_env
+{
+	char			*var_name;
+	char			*var_value;
+	struct s_env	*next;
+}					t_env;
 
 typedef struct s_msh
 {
@@ -45,7 +51,6 @@ typedef struct s_msh
 	t_node	*node_tmp;
 	t_env	*env_lst;
 	char	**envs;
-	int		status;
 	char	*s_status;
 	char	**tokens;
 	int		toks_count;
@@ -60,7 +65,6 @@ typedef struct s_msh
 	char	*heredoc_stop_f;
 	int		heredoc_fd;
 }				t_msh;
-
 
 char	*get_prompt(void);
 
@@ -93,14 +97,19 @@ int		special_chars_lexer(char *line, int i);
 int		handle_status_from_lexer(int i, t_msh *msh_ctx);
 
 // token_saver
-void	single_quote_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
-void	double_quotes_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
-void	regular_char_token_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
-void	special_chars_token_saver(char **tokens, int token_n, char *line, int i);
-int		handle_status_from_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
+void	single_quote_token_saver(char **tokens, int token_n, \
+													int i, t_msh *msh_ctx);
+void	double_quotes_token_saver(char **tokens, int token_n, \
+													int i, t_msh *msh_ctx);
+void	regular_char_token_saver(char **tokens, int token_n, \
+													int i, t_msh *msh_ctx);
+void	special_chars_token_saver(char **tokens, int token_n, \
+													char *line, int i);
+int		handle_status_from_saver(char **tokens, int token_n, \
+													int i, t_msh *msh_ctx);
 
 // tokens_to_ast_nodes
-t_node 	*tokens_to_ast_nodes(char **tokens, int toks_count, t_msh *msh_ctx);
+t_node	*tokens_to_ast_nodes(char **tokens, int toks_count, t_msh *msh_ctx);
 int		is_in_exception_indexes(t_msh *msh_ctx, int token_i);
 
 // node
@@ -108,18 +117,22 @@ void	print_nodes_list(t_node *ast_nodes);
 int		is_special_token(char **tokens, int t_i, t_msh *msh_ctx);
 int		is_special_symbols(char *token);
 void	ast_node_lst_push_bottom(t_node **head, t_redirect_type type);
-void	node_lst_push_bottom(t_node **head, char **tokens, int *t_i, t_msh *msh_ctx);
+void	node_lst_push_bottom(t_node **head, char **tokens, int *t_i, \
+														t_msh *msh_ctx);
 t_node	*get_last_ast_node(t_node *head);
-char	**get_node_argv(char **tokens, int *token_i, t_msh *msh_ctx, t_node *new);
+char	**get_node_argv(char **tokens, int *token_i, t_msh *msh_ctx, \
+															t_node *new);
 int		is_pipe_token(char **tokens, int t_i, t_msh *msh_ctx);
 int		is_redirect_token(char **tokens, int t_i, t_msh *msh_ctx);
 
 // redirect
-int		redir_token_handler(char **tokens, int *t_i, t_msh *msh_ctx, t_node *new);
+int		redir_token_handler(char **tokens, int *t_i, t_msh *msh_ctx, \
+															t_node *new);
 
 // get_env
 int		pass_env_var_value_from_lexer(char *line, int i, t_msh *msh_ctx);
-int		get_env_var_value_to_saver(char **tokens, int token_n, int i, t_msh *msh_ctx);
+int		get_env_var_value_to_saver(char **tokens, int token_n, \
+													int i, t_msh *msh_ctx);
 char	*get_env_value_by_name_from_envs(void *name, t_msh *msh_ctx);
 void	env_val_len_by_name_from_lst(char *name, t_msh *msh_ctx);
 
@@ -128,6 +141,8 @@ char	*get_cmd_path(char *cmd_name, t_msh *msh_ctx);
 
 // executor
 void	executor(t_msh *msh_ctx);
+void	one_cmd_executor(t_msh *msh_ctx);
+void	ft_puterror(char *s1, char *s2);
 
 // exec
 int		is_builtin(char *cmd_name);
@@ -139,7 +154,7 @@ void	ms_write_heredoc_file(t_msh *msh_ctx);
 
 // signals
 void	sigint_handler(int sig);
-int event(void);
+void	signal_while_child_handler(int sig);
 
 // buildins
 int		cd_builtin(t_msh *msh_ctx);
@@ -157,9 +172,29 @@ void	free_string_array(char **argv);
 
 // utils
 char	*alloc(int token_len);
-int 	get_tokens_count(char **tokens);
+int		get_tokens_count(char **tokens);
 void	print_string_array(char **argv, int count);
 void	print_int_array(int *array, int n);
 int		len_2d_array(char **string);
+
+// envs_lst_saver
+void	envs_saver(char **env, t_env **envs_lst);
+char	*get_env_value_to_save(char *env, int i, int k);
+char	**envs_lst_to_char_array(t_env *env_lst);
+
+// get_env
+char	*get_env_name_from_line(char *line, int tmp_i, int var_len);
+void	put_env_value_to_token(char *var_value, char **tokens, int token_n);
+
+// envs_lst_utils
+void	env_lst_push_bottom(t_env **head, char *name, char *value);
+t_env	*get_last_node(t_env *head);
+void	free_env_lst(t_env **lst);
+int		get_envs_count(t_env *envs);
+void	export_print_env_list(t_env *envs);
+char	*get_env_name_to_buildin(char *argv, int *k);
+int		get_env_n_if_exists(t_env *envs, char *name);
+int		env_lst_update_node(t_env *envs, char *name, char *value);
+void	env_lst_remove_n_node(t_env **envs, int n);
 
 #endif

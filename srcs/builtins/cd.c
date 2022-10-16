@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 13:20:05 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 13:42:08 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 19:06:19 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	exec_chdir(t_msh *msh_ctx, char	*dir_to, char *old_dir, char *new_dir)
 {
 	if (chdir(dir_to) != 0)
 	{
-		printf("bash: cd: %s: No such file or directory\n", dir_to);
+		printf("error: cd: cannot change directory to %s\n", dir_to);
 		free(old_dir);
 		return (1);
 	}

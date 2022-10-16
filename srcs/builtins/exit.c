@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 13:21:59 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 11:15:04 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 19:07:35 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ int	exit_builtin(t_msh *msh_ctx)
 		exit(code);
 	}
 	else
-		exit(msh_ctx->status);
+		exit(g_lobal_status);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 13:28:45 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 15:57:07 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 17:28:52 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,19 @@ int	is_builtin(char *cmd_name)
 void	proxy_to_builtins(t_msh *msh_ctx)
 {
 	if (ft_strcmp(msh_ctx->node->cmd_name, "exit") == 0)
-		msh_ctx->status = exit_builtin(msh_ctx);
+		g_lobal_status = exit_builtin(msh_ctx);
 	else if (ft_strcmp(msh_ctx->node->cmd_name, "pwd") == 0)
-		msh_ctx->status = pwd_builtin(msh_ctx);
+		g_lobal_status = pwd_builtin(msh_ctx);
 	else if (ft_strcmp(msh_ctx->node->cmd_name, "echo") == 0)
-		msh_ctx->status = echo_builtin(msh_ctx);
+		g_lobal_status = echo_builtin(msh_ctx);
 	else if (ft_strcmp(msh_ctx->node->cmd_name, "cd") == 0)
-		msh_ctx->status = cd_builtin(msh_ctx);
+		g_lobal_status = cd_builtin(msh_ctx);
 	else if (ft_strcmp(msh_ctx->node->cmd_name, "env") == 0)
-		msh_ctx->status = env_builtin(msh_ctx);
+		g_lobal_status = env_builtin(msh_ctx);
 	else if (ft_strcmp(msh_ctx->node->cmd_name, "export") == 0)
-		msh_ctx->status = export_builtin(msh_ctx);
+		g_lobal_status = export_builtin(msh_ctx);
 	else if (ft_strcmp(msh_ctx->node->cmd_name, "unset") == 0)
-		msh_ctx->status = unset_builtin(msh_ctx);
+		g_lobal_status = unset_builtin(msh_ctx);
 }
 
 void	exec_builtin(t_msh *msh_ctx)

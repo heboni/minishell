@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 22:35:10 by sotherys          #+#    #+#             */
-/*   Updated: 2022/10/15 16:59:16 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 15:09:44 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	main(int argc, char **argv, char **env)
 	t_msh	*msh_ctx;
 
 	rl_catch_signals = 0;
-	rl_event_hook=event;
+	// rl_event_hook=event;
 	msh_ctx = msh_ctx_init(argc, argv, env);
 	while (1)
 	{

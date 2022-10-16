@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: heboni <heboni@student.42.fr>              +#+  +:+       +#+        */
+/*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 09:06:01 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/15 15:54:12 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 12:41:50 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	signal_while_heredoc_handler(int sig)
 		ft_putstr_fd("\n\"Ctrl+C\" while_heredoc was pressed\n", 1);
 		// rl_on_new_line();
 		// rl_replace_line("", 1);
-		rl_done = 1;
+		
+		// rl_done = 1;
 		rl_redisplay();
 		// g_lobal_status = 1;
 	}
@@ -39,7 +40,7 @@ void	ms_write_heredoc_file(t_msh *msh_ctx)
 		return ;
 	while (1)
 	{
-		rl_event_hook=event;
+		// rl_event_hook=event;
 		signal(SIGINT, signal_while_heredoc_handler);
 		str = readline("> ");
 		if (str == NULL) //Ctrl-D

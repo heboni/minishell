@@ -6,7 +6,7 @@
 /*   By: heboni <heboni@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 23:18:25 by heboni            #+#    #+#             */
-/*   Updated: 2022/10/14 17:07:12 by heboni           ###   ########.fr       */
+/*   Updated: 2022/10/16 12:54:29 by heboni           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	unset_builtin(t_msh *msh_ctx)
 	argv = msh_ctx->node->argv + 1;
 	while (*argv != NULL)
 	{
-		printf("%s\n", *argv);
 		if (is_not_valid(*argv))
 		{
 			printf("bash: unset: '%s': not a valid identifier\n", *argv);
